@@ -7,6 +7,7 @@
 
 #include "init.h"
 #include "lcd.h"
+#include <avr/pgmspace.h>
 
 /*!
  * \brief Fő inicializáló rutin
@@ -19,6 +20,7 @@
  */
 void init(void) {
 	init_LCD();
+	defineChars();
 }
 
 /*!
@@ -28,6 +30,16 @@ void init(void) {
  */
 void init_LCD(void) {
 	lcd_init(LCD_DISP_ON);		//LCD init
-	lcd_clrscr();				//LCD clear and cursor home
 }
 
+/*!
+ * \brief Saját karakterek definíciója
+ * \param void
+ * \return none
+ */
+void defineChars(void) {
+	lcd_command(_BV(LCD_CGRAM));  /* set CG RAM start address 0 */
+    for(uint8_t i = 0; i < (DEFINED_CHAR * 8); i++) {
+        lcd_data(pgm_read_byte_near(&defChar[i]));
+    }
+}
