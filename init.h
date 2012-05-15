@@ -47,5 +47,6 @@ void EEPROMtoDatas(void);
 void init_ADC(void);
 void init_LCD(void);
 void defineChars(void);
+void init_Timer(void);
 
 #endif /* INIT_H_ */
