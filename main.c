@@ -6,14 +6,28 @@
  */
 
 #include "lcd.h"
+#include "adc.h"
 #include <avr/io.h>
+#include <stdlib.h>
+#include <util/delay.h>
 
 int main(void) {
+
+	char buffer[5];
+
+	ADCInit();
 
 	lcd_init(LCD_DISP_ON);		//LCD init
 	lcd_clrscr();				//LCD clear and cursor home
 	lcd_puts("Ezt irjuk ki");	//LCD-re string kiirasa
 
-	for (;;);					//Loop...
+	for (;;) {
+		unsigned int temp;
+		temp = ADCGet(MEDENCE_CH);
+		lcd_gotoxy(0,1);
+		itoa(temp, buffer, 10);
+		lcd_puts(buffer); lcd_puts("  ");
+		_delay_ms(100);
+	}
 	return 0;
 }
