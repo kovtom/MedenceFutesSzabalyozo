@@ -58,7 +58,7 @@
  *  Change these definitions to adapt setting to your display
  */
 #define LCD_LINES           2     /**< number of visible lines of the display */
-#define LCD_DISP_LENGTH    16     /**< visibles characters per line of the display */
+#define LCD_DISP_LENGTH    24     /**< visibles characters per line of the display */
 #define LCD_LINE_LENGTH  0x40     /**< internal line length of the display    */
 #define LCD_START_LINE1  0x00     /**< DDRAM address of first char of line 1 */
 #define LCD_START_LINE2  0x40     /**< DDRAM address of first char of line 2 */
@@ -83,20 +83,21 @@
  *  ports by adapting the LCD_DATAx_PORT and LCD_DATAx_PIN definitions.
  *  
  */
-#define LCD_PORT         PORTA        /**< port for the LCD lines   */
-#define LCD_DATA0_PORT   LCD_PORT     /**< port for 4bit data bit 0 */
-#define LCD_DATA1_PORT   LCD_PORT     /**< port for 4bit data bit 1 */
-#define LCD_DATA2_PORT   LCD_PORT     /**< port for 4bit data bit 2 */
-#define LCD_DATA3_PORT   LCD_PORT     /**< port for 4bit data bit 3 */
-#define LCD_DATA0_PIN    0            /**< pin for 4bit data bit 0  */
-#define LCD_DATA1_PIN    1            /**< pin for 4bit data bit 1  */
+#define LCD_PORT1        PORTA        /**< port 1 for the LCD lines  */
+#define LCD_PORT2		 PORTD		  /**< port 2 for the LCD lines  */
+#define LCD_DATA0_PORT   LCD_PORT2     /**< port for 4bit data bit 0 */
+#define LCD_DATA1_PORT   LCD_PORT2     /**< port for 4bit data bit 1 */
+#define LCD_DATA2_PORT   LCD_PORT1     /**< port for 4bit data bit 2 */
+#define LCD_DATA3_PORT   LCD_PORT1     /**< port for 4bit data bit 3 */
+#define LCD_DATA0_PIN    5            /**< pin for 4bit data bit 0  */
+#define LCD_DATA1_PIN    6            /**< pin for 4bit data bit 1  */
 #define LCD_DATA2_PIN    2            /**< pin for 4bit data bit 2  */
 #define LCD_DATA3_PIN    3            /**< pin for 4bit data bit 3  */
-#define LCD_RS_PORT      LCD_PORT     /**< port for RS line         */
-#define LCD_RS_PIN       4            /**< pin  for RS line         */
-#define LCD_RW_PORT      LCD_PORT     /**< port for RW line         */
+#define LCD_RS_PORT      LCD_PORT1     /**< port for RS line         */
+#define LCD_RS_PIN       4           /**< pin  for RS line         */
+#define LCD_RW_PORT      LCD_PORT1     /**< port for RW line         */
 #define LCD_RW_PIN       5            /**< pin  for RW line         */
-#define LCD_E_PORT       LCD_PORT     /**< port for Enable line     */
+#define LCD_E_PORT       LCD_PORT1     /**< port for Enable line     */
 #define LCD_E_PIN        6            /**< pin  for Enable line     */
 
 #elif defined(__AVR_AT90S4414__) || defined(__AVR_AT90S8515__) || defined(__AVR_ATmega64__) || \
