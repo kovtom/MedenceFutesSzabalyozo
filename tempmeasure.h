@@ -11,6 +11,6 @@
 
 #define AVERAGE_COUNT 50		//**< Ennyi mérést végzünk egyszerre, majd átlagolunk */
 
-unsigned char NapkollGetTemp(void);
+unsigned char GetTemp(unsigned char channel);
 
 #endif /* TEMPMEASURE_H_ */

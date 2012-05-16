@@ -27,7 +27,7 @@ int main(void) {
 		//temp = ADCGet(MEDENCE_CH);
 
 		unsigned char temp;
-		temp = NapkollGetTemp();
+		temp = GetTemp(MEDENCE_CH);
 		lcd_gotoxy(0,1);
 		itoa(temp, buffer, 10);
 		lcd_puts(buffer);
