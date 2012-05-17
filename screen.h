@@ -41,7 +41,14 @@
 #define BEKAPCSHOF 8	//**< 'Bekapcs. hofok:' string */
 #define B1 9			//**< '(1):' string */
 #define B2 10			//**< '(2):' string */
+#define ERROR_S 11		//**< 'Error' string */
+#define BE_S 12			//**< 'BE\n' string */
+#define KI_S 13			//**< 'KI\n' string */
+#define PUPM_STATE_S 14	//**< 'S:' string */
+#define REMAIN_S 15		//**< 'R:' string */
+#define ON_TEMP_S 16	//**< 'T:' string */
 
+#define DEFINED_CHAR 7	//**< Ennyi saját LCD karaktert definiálunk */
 
 /*!
  * \struct SCREEN
@@ -74,7 +81,7 @@ void ScreenSet_pump_state(unsigned char);
 void ScreenSet_remain(unsigned char);
 void ScreenSet_remain_unit(unsigned char);
 void ScreenSet_on_temp(unsigned char);
-void ScreenSet_last_heat(unsigned char);
+void ScreenSet_last_heat(unsigned char *);
 void ScreenSet_mode(unsigned char);
 
 #endif /* SCREEN_H_ */
