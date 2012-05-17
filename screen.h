@@ -48,7 +48,7 @@
 #define REMAIN_S 15		//**< 'R:' string */
 #define ON_TEMP_S 16	//**< 'T:' string */
 
-#define DEFINED_CHAR 7	//**< Ennyi saját LCD karaktert definiálunk */
+#define DEFINED_CHAR 8	//**< Ennyi saját LCD karaktert definiálunk */
 
 /*!
  * \struct SCREEN

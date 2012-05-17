@@ -26,6 +26,7 @@
 #define CELSIUS_C 4			//**< °C karakter */
 #define FEL_C 5				//**< ^ karakter */
 #define LE_C 6				//**< ˇ karakter */
+#define FELNYIL 7			//**< felfelé mutató nyíl karakter */
 
 #define LCD_PUTS_MIN lcd_putc(MIN_C1);lcd_putc(MIN_C2)  //**< min mértékegység kiírása */
 #define LCD_PUTS_SEC lcd_putc(SEC_C1);lcd_putc(SEC_C2)	//**< sec mértékegység kiírása */

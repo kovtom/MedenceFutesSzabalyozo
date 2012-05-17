@@ -23,7 +23,8 @@ static const PROGMEM unsigned char defChar[] = {
 		0x00, 0x00, 0x19, 0x12, 0x1a, 0x12, 0x19, 0x00,
 		0x18, 0x1b, 0x04, 0x08, 0x08, 0x04, 0x03, 0x00,		//°C
 		0x00, 0x04, 0x04, 0x0e, 0x0e, 0x1f, 0x1f, 0x00,		//fel
-		0x00, 0x1f, 0x1f, 0x0e, 0x0e, 0x04, 0x04, 0x00		//le
+		0x00, 0x1f, 0x1f, 0x0e, 0x0e, 0x04, 0x04, 0x00,		//le
+		0x04, 0x0e, 0x15, 0x04, 0x04, 0x04, 0x00, 0x00		//felnyíl
 };
 
 static const char string0[] PROGMEM = "Medence:";
@@ -90,7 +91,7 @@ void ScreenInit(void){
 	lcd_clrscr();											//clear LCD
 	ScreenSelector(SCREEN_MAIN);   //kezdeti screen adatok beállítása
 	ScreenSet_med_temp(21);
-	ScreenSet_trend(40);
+	ScreenSet_trend(150);
 	ScreenSet_trend_unit(MIN);
 	ScreenSet_pump_state(PUMP_ON);
 	ScreenSet_koll_temp(31);
@@ -131,7 +132,7 @@ void ScreenRefresh(void) {
 		lcd_putc(CELSIUS_C);
 		lcd_putc(' ');
 
-		lcd_putc(FEL_C);					//^12min/°C
+		lcd_putc(FELNYIL);					//^12min/°C
 		itoa(screen.trend, buffer, 10);
 		lcd_puts(buffer);
 		if(screen.trend_unit) {				//mértékegység választása
@@ -236,6 +237,7 @@ void ScreenSet_koll_temp(unsigned char value) {
  * \return none
  */
 void ScreenSet_trend(unsigned char value) {
+	if(value > 99) value = 99;
 	screen.trend = value;
 }
 
@@ -263,6 +265,7 @@ void ScreenSet_pump_state(unsigned char value) {
  * \return none
  */
 void ScreenSet_remain(unsigned char value) {
+	if(value > 99) value = 99;
 	screen.remain = value;
 }
 
@@ -281,6 +284,7 @@ void ScreenSet_remain_unit(unsigned char value) {
  * \return none
  */
 void ScreenSet_on_temp(unsigned char value) {
+	if(value > 99) value = 99;
 	screen.on_temp = value;
 }
 
