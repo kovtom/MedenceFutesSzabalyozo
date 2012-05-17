@@ -50,6 +50,10 @@
 
 #define DEFINED_CHAR 8	//**< Ennyi saját LCD karaktert definiálunk */
 
+#define TREND_MAX 99 	//**< A trend érték maximuma */
+#define REMAIN_MAX 99	//**< A remain érték maximuma */
+#define ONTEMP_MAX 99	//**< Az on_temp érték maximuma */
+
 /*!
  * \struct SCREEN
  * \brief LCD screen struktúra
@@ -68,6 +72,7 @@ typedef struct SCREEN {
 	unsigned char last_heat[5];	//**< Utolsó öt felfűtési időtartam */
 	unsigned char mode;			//**< Bekapcsolási metódus (különbségi/abszolút) */
 	unsigned char selector;		//**< Melyik képernyőt jelenítjük meg(0,1,3,4) */
+	unsigned char prev_selector;//**< Az előző refresh selectora */
 } SCREEN;
 
 void ScreenInit(void);

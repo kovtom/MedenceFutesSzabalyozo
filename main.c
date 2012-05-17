@@ -9,6 +9,8 @@
 #include "adc.h"
 #include "init.h"
 #include "screen.h"
+#include "misc.h"
+#include "tempmeasure.h"
 #include <avr/io.h>
 #include <stdlib.h>
 #include <util/delay.h>
@@ -17,13 +19,13 @@ int main(void) {
 
 	Init();
 
+	unsigned char i = 40;
 	for (;;) {
-		static unsigned char i;
 		ScreenRefresh();
-		ScreenSelector(i);
-		_delay_ms(4000);
-		i++;
-		if(i > 3) i = 0;
+		ScreenSet_koll_temp(GetTemp(NAPKOLLEKTOR_CH));
+		_delay_ms(500);
+		--i;
+		if(i >= 0) ScreenSet_trend(i);
 	}
 
 	return 0;

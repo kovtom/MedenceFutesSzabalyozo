@@ -8,6 +8,8 @@
 #include "misc.h"
 #include "screen.h"
 #include "lcd.h"
+#include "adc.h"
+#include "tempmeasure.h"
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 
@@ -24,7 +26,7 @@ static const PROGMEM unsigned char defChar[] = {
 		0x18, 0x1b, 0x04, 0x08, 0x08, 0x04, 0x03, 0x00,		//°C
 		0x00, 0x04, 0x04, 0x0e, 0x0e, 0x1f, 0x1f, 0x00,		//fel
 		0x00, 0x1f, 0x1f, 0x0e, 0x0e, 0x04, 0x04, 0x00,		//le
-		0x04, 0x0e, 0x15, 0x04, 0x04, 0x04, 0x00, 0x00		//felnyíl
+		0x04, 0x0e, 0x15, 0x04, 0x04, 0x04, 0x04, 0x00		//felnyíl
 };
 
 static const char string0[] PROGMEM = "Medence:";
@@ -90,14 +92,15 @@ void ScreenInit(void){
 	}
 	lcd_clrscr();											//clear LCD
 	ScreenSelector(SCREEN_MAIN);   //kezdeti screen adatok beállítása
-	ScreenSet_med_temp(21);
-	ScreenSet_trend(150);
+	ScreenSet_med_temp(GetTemp(MEDENCE_CH));
+	ScreenSet_trend(TREND_MAX);
 	ScreenSet_trend_unit(MIN);
-	ScreenSet_pump_state(PUMP_ON);
-	ScreenSet_koll_temp(31);
-	ScreenSet_remain(18);
-	ScreenSet_remain_unit(SEC);
+	ScreenSet_pump_state(PUMP_OFF);
+	ScreenSet_koll_temp(GetTemp(NAPKOLLEKTOR_CH));
+	ScreenSet_remain(REMAIN_MAX);
+	ScreenSet_remain_unit(MIN);
 	ScreenSet_on_temp(45);
+	screen.prev_selector = 0xFF;  //érvénytelen selector, hogy elsőre legyen kiirás
 
 	unsigned char tmp[5];
 	for(unsigned char i = 0; i < 5; i++) {
@@ -123,7 +126,12 @@ void ScreenSelector(unsigned char value) {
  */
 void ScreenRefresh(void) {
 	char buffer[3];							//itoa eredményét tároljuk itt
-	lcd_clrscr();							//lcd clear
+	if(screen.selector != screen.prev_selector) {	//ha az előző selector ua. volt akkor
+		lcd_clrscr();								//nem törlünk, hogy ne villogjon az LCD
+	} else {										//csak a kurzort mozgatjuk home-ba
+		lcd_home();
+	}
+	screen.prev_selector = screen.selector;			//tároljuk az előző selectort
 
 	if(screen.selector == SCREEN_MAIN) {
 		lcd_puts_p(string_table[MEDENCE]);	//Medence:20°C
@@ -134,7 +142,8 @@ void ScreenRefresh(void) {
 
 		lcd_putc(FELNYIL);					//^12min/°C
 		itoa(screen.trend, buffer, 10);
-		lcd_puts(buffer);
+		if(screen.trend < 10) lcd_putc(' '); //ha a számérték egy számjegyű elé
+		lcd_puts(buffer);					 //teszünk egy space-t
 		if(screen.trend_unit) {				//mértékegység választása
 			LCD_PUTS_MIN;
 		} else {
@@ -159,7 +168,8 @@ void ScreenRefresh(void) {
 
 		lcd_puts_p(string_table[REMAIN_S]);						//R:20min
 		itoa(screen.remain, buffer, 10);
-		lcd_puts(buffer);
+		if(screen.remain < 10) lcd_putc(' ');	//ha a számérték egy számjegyű
+		lcd_puts(buffer);						//akkor elé teszünk egy space-t
 		if(screen.remain_unit) {
 			LCD_PUTS_MIN;
 		} else {
@@ -169,6 +179,7 @@ void ScreenRefresh(void) {
 
 		lcd_puts_p(string_table[ON_TEMP_S]);						//T:20°C
 		itoa(screen.on_temp, buffer, 10);
+		if(screen.on_temp < 10) lcd_putc(' ');
 		lcd_puts(buffer);
 		lcd_putc(CELSIUS_C);
 	}
@@ -237,7 +248,7 @@ void ScreenSet_koll_temp(unsigned char value) {
  * \return none
  */
 void ScreenSet_trend(unsigned char value) {
-	if(value > 99) value = 99;
+	if(value > TREND_MAX) value = TREND_MAX;
 	screen.trend = value;
 }
 
@@ -265,7 +276,7 @@ void ScreenSet_pump_state(unsigned char value) {
  * \return none
  */
 void ScreenSet_remain(unsigned char value) {
-	if(value > 99) value = 99;
+	if(value > REMAIN_MAX) value = REMAIN_MAX;
 	screen.remain = value;
 }
 
@@ -284,7 +295,7 @@ void ScreenSet_remain_unit(unsigned char value) {
  * \return none
  */
 void ScreenSet_on_temp(unsigned char value) {
-	if(value > 99) value = 99;
+	if(value > ONTEMP_MAX) value = ONTEMP_MAX;
 	screen.on_temp = value;
 }
 
