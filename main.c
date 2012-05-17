@@ -19,13 +19,25 @@ int main(void) {
 
 	Init();
 
-	unsigned char i = 40;
+	unsigned char i = 99;
+	unsigned char j = 0;
 	for (;;) {
 		ScreenRefresh();
 		ScreenSet_koll_temp(GetTemp(NAPKOLLEKTOR_CH));
-		_delay_ms(500);
-		--i;
-		if(i >= 0) ScreenSet_trend(i);
+		_delay_ms(100);
+		if(i > 0) {
+			--i;
+		} else {
+			i = 100;
+		}
+		ScreenSet_trend(i);
+		if(j < 100) {
+			++j;
+		} else {
+			j = 0;
+		}
+		ScreenSet_remain(j);
+		ScreenSet_on_temp(j);
 	}
 
 	return 0;
