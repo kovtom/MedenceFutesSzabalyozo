@@ -10,6 +10,8 @@
 #include "misc.h"
 #include "timer.h"
 #include "trend.h"
+#include "setup.h"
+#include "remain.h"
 
 /*!
  * \brief Fő inicializáló függvény
@@ -19,6 +21,8 @@
 void Init(void) {
 	InitTimer();
 	ADCInit();
+	SetupInit();
+	RemainInit();
 	TrendInit();
 	ScreenInit();
 }

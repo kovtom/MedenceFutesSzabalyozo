@@ -15,6 +15,7 @@
 #define TREND_H_
 
 #define TREND_MAX 99 			//**< A trend érték maximuma */
+#define TREND_OVERFLOW 65535	//**< Ennyi a trend max értéke */
 
 /*!
  * \brief A trend változói tartalmazó struktúra

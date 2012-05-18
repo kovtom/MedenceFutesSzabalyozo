@@ -50,7 +50,6 @@
 
 #define DEFINED_CHAR 8	//**< Ennyi saját LCD karaktert definiálunk */
 
-#define REMAIN_MAX 99	//**< A remain érték maximuma */
 #define ONTEMP_MAX 99	//**< Az on_temp érték maximuma */
 
 /*!

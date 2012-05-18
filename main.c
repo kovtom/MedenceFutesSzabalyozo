@@ -13,6 +13,8 @@
 #include "timer.h"
 #include "tempmeasure.h"
 #include "trend.h"
+#include "setup.h"
+#include "remain.h"
 #include <avr/io.h>
 #include <stdlib.h>
 #include <util/delay.h>
@@ -33,18 +35,15 @@ int main(void) {
 		ScreenSet_koll_temp(TempGet(NAPKOLLEKTOR_CH));
 		ScreenSet_trend(TrendGet());
 		ScreenSet_trend_unit(TrendGetUnit());
+		ScreenSet_on_temp(SetupGetOnTemp());
+		ScreenSet_remain(RemainGet());
+		ScreenSet_remain_unit(RemainGetUnit());
 		if(TimeGetNow() - prev_time > 50) {
 			LED_PORT |= _BV(LED_PIN);
 			prev_time = TimeGetNow();
 		}
 		_delay_ms(100);
 		LED_PORT &= ~_BV(LED_PIN);
-		unsigned int tmp = (TimeGetNow() - TrendGetTimeStart()) / TICK_SEC;
-		if(tmp > 59) tmp = tmp / 60;
-		ScreenSet_remain((unsigned char)tmp);
-		signed char tmp2 = TempGet(NAPKOLLEKTOR_CH) - TrendGetTempStart();
-		if(tmp2 < 0) tmp2 = 0;
-		ScreenSet_on_temp(tmp2);
 	}
 
 	return 0;

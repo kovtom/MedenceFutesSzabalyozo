@@ -59,7 +59,7 @@ unsigned char TrendGet(void) {
 			trend.trend_unit = SEC;
 		}
 	} else {
-		trend.trend = TREND_MAX;
+		trend.trend = TREND_OVERFLOW;
 		trend.trend_unit = MIN;
 	}
 	return (unsigned char)trend.trend;

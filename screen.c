@@ -10,6 +10,7 @@
 #include "lcd.h"
 #include "adc.h"
 #include "trend.h"
+#include "remain.h"
 #include "tempmeasure.h"
 #include <avr/pgmspace.h>
 #include <stdlib.h>
