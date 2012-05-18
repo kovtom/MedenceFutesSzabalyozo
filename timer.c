@@ -23,7 +23,7 @@ volatile static uint32_t time;
 void InitTimer(void) {
 	TIMSK |= TOIE0;					//Timer overflow interrupt engedélyezés
 	TCCR0 |= PRESCALER_256;			//256-os osztóval indítjuk a Timer0-t
-	sei();
+	sei();							//Interrupt enable
 }
 
 uint32_t GetTimeNow(void) {
