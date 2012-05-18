@@ -19,7 +19,7 @@
  * \param channel unsigned char channel
  * \return celsius unsigned int celsius fokra kerekítve
  */
-unsigned char GetTemp(unsigned char channel) {
+unsigned char TempGet(unsigned char channel) {
 	uint32_t measured = 0;
 	uint16_t celsius;
 	unsigned char tmp;

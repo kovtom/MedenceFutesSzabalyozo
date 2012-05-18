@@ -9,6 +9,7 @@
 #include "screen.h"
 #include "lcd.h"
 #include "adc.h"
+#include "trend.h"
 #include "tempmeasure.h"
 #include <avr/pgmspace.h>
 #include <stdlib.h>
@@ -92,11 +93,11 @@ void ScreenInit(void){
 	}
 	lcd_clrscr();											//clear LCD
 	ScreenSelector(SCREEN_MAIN);   //kezdeti screen adatok beállítása
-	ScreenSet_med_temp(GetTemp(MEDENCE_CH));
-	ScreenSet_trend(TREND_MAX);
-	ScreenSet_trend_unit(MIN);
+	ScreenSet_med_temp(TempGet(MEDENCE_CH));
+	ScreenSet_trend(TrendGet());
+	ScreenSet_trend_unit(TrendGetUnit());
 	ScreenSet_pump_state(PUMP_OFF);
-	ScreenSet_koll_temp(GetTemp(NAPKOLLEKTOR_CH));
+	ScreenSet_koll_temp(TempGet(NAPKOLLEKTOR_CH));
 	ScreenSet_remain(REMAIN_MAX);
 	ScreenSet_remain_unit(MIN);
 	ScreenSet_on_temp(45);

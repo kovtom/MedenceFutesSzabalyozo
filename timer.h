@@ -18,8 +18,8 @@
 #define PRESCALER_64   ((1<<CS01)|(1<<CS00))		//**< clk/64 */
 #define PRESCALER_256  (1<<CS02)					//**< clk/256 */
 #define PRESCALER_1024 ((1<<CS02)|(CS01))			//**< clk/1024 */
-
+#define TICK_SEC 50									//**< ennyi tick/sec */
 void InitTimer(void);
-uint32_t GetTimeNow(void);
+unsigned long int TimeGetNow(void);
 
 #endif /* TIMER_H_ */

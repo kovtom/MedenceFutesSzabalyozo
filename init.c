@@ -8,6 +8,8 @@
 #include "adc.h"
 #include "screen.h"
 #include "misc.h"
+#include "timer.h"
+#include "trend.h"
 
 /*!
  * \brief Fő inicializáló függvény
@@ -15,6 +17,8 @@
  * \return none
  */
 void Init(void) {
+	InitTimer();
 	ADCInit();
+	TrendInit();
 	ScreenInit();
 }

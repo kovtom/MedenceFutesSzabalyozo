@@ -18,15 +18,15 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-volatile static uint32_t time;
+volatile static unsigned long int time;
 
 void InitTimer(void) {
-	TIMSK |= TOIE0;					//Timer overflow interrupt engedélyezés
+	TIMSK |= _BV(TOIE0);			//Timer overflow interrupt engedélyezés
 	TCCR0 |= PRESCALER_256;			//256-os osztóval indítjuk a Timer0-t
 	sei();							//Interrupt enable
 }
 
-uint32_t GetTimeNow(void) {
+unsigned long int TimeGetNow(void) {
 	return time;
 }
 
