@@ -8,13 +8,14 @@
 #ifndef MISC_H_
 #define MISC_H_
 
-#define DEBUG
+#define DEBUG_TEMPMEASURE
 #define SCREEN_MAIN 0		//**< A fő képernyő */
 #define SCREEN_LASTFIVE 1	//**< Utolsó öt felfűtési idő képernyő */
 #define SCREEN_SET_MODE 2	//**< Beállítás fűtési mód képernyő */
 #define SCREEN_SET_TEMP 3	//**< Beállítás hőmérséklet képernyő */
-#define PUMP_ON 1			//**< ON (szivattyú) */
 #define PUMP_OFF 0			//**< OFF (szivattyú) */
+#define PUMP_ON 1			//**< ON (szivattyú) */
+#define PUMP_ERROR 3		//**< Magasabb a medence hőm mint az abs beállított */
 #define MODE_ABS 1			//**< Bekapcsolási módszer <abszolut> */
 #define MODE_KUL 0			//**< Bekapcsolási módszer <kulonbseg> */
 #define MIN 1				//**< min mértékegység */

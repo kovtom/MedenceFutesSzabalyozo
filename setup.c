@@ -7,6 +7,7 @@
 
 #include "setup.h"
 #include "misc.h"
+#include "eeprom.h"
 
 static SETUP setup;
 
@@ -16,8 +17,8 @@ static SETUP setup;
  * \return none
  */
 void SetupInit(void) {
-	setup.steup_on_temp = 30;
-	setup.setup_mode = MODE_KUL;
+	setup.setup_on_temp = EEPROMReadOnTemp();
+	setup.setup_mode = EEPROMReadMode();
 }
 
 /*!
@@ -35,7 +36,23 @@ unsigned char SetupGetMode(void) {
  * \return setup.setup_on_temp unsigned char
  */
 unsigned char SetupGetOnTemp(void) {
-	return setup.steup_on_temp;
+	return setup.setup_on_temp;
 }
 
+/*!
+ * \brief Bekapcsolási hőmérséklet változtatása.
+ * \param value unsigned char
+ * \return none
+ */
+void SetupWriteOnTemp(unsigned char value) {
+	setup.setup_on_temp = value;
+}
 
+/*!
+ * \brief Bekapcsolási mód változtatása.
+ * \param value unsigned char
+ * \return none
+ */
+void SetupWriteMode(unsigned char value) {
+	setup.setup_mode = value;
+}

@@ -11,7 +11,8 @@
 #ifndef REMAIN_H_
 #define REMAIN_H_
 
-#define REMAIN_MAX 99	//**< A remain érték maximuma */
+#define REMAIN_MAX 99			//**< A remain érték kijelzett maximuma */
+#define REMAIN_OVERFLOW 65535 	//**< remain érték maximuma */
 
 typedef struct REMAIN {
 	unsigned int remain;			//**< ennyi idő van még */
@@ -19,7 +20,7 @@ typedef struct REMAIN {
 }REMAIN;
 
 void RemainInit(void);
-unsigned char RemainGet(void);
+unsigned int RemainGet(void);
 unsigned char RemainGetUnit(void);
 
 #endif /* REMAIN_H_ */

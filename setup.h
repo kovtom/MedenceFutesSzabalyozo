@@ -14,11 +14,13 @@
 
 typedef struct SETUP {
 	unsigned char setup_mode;		//**< abszolút/különbségi */
-	unsigned char steup_on_temp;	//**< bekapcsolási hőmérséklet */
+	unsigned char setup_on_temp;	//**< bekapcsolási hőmérséklet */
 }SETUP;
 
 void SetupInit(void);
 unsigned char SetupGetMode(void);
 unsigned char SetupGetOnTemp(void);
+void SetupWriteOnTemp(unsigned char);
+void SetupWriteMode(unsigned char);
 
 #endif /* SETUP_H_ */

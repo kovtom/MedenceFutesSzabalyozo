@@ -46,11 +46,15 @@
 #define KI_S 13			//**< 'KI\n' string */
 #define PUPM_STATE_S 14	//**< 'S:' string */
 #define REMAIN_S 15		//**< 'R:' string */
-#define ON_TEMP_S 16	//**< 'T:' string */
+#define ON_TEMP_ABS_S 16 //**< 'T=' string */
+#define PUMP_ERROR_S 17 //**< '**\n' string */
+#define ON_TEMP_KUL_S 18 //**< 'T>' string */
 
 #define DEFINED_CHAR 8	//**< Ennyi saját LCD karaktert definiálunk */
 
 #define ONTEMP_MAX 99	//**< Az on_temp érték maximuma */
+#define MED_TEMP_MAX 99 //**< A medence hőmérséklet maximuma */
+#define NAPKOLL_TEMP_MAX 99 /**< A napkollektor hőmérséklet maximuma */
 
 /*!
  * \struct SCREEN
@@ -61,10 +65,10 @@
 typedef struct SCREEN {
 	unsigned char med_temp;		//**< Medence hőmérséklet string */
 	unsigned char koll_temp;	//**< Napkollektor hőmérséklet */
-	unsigned char trend;		//**< Hőmérséklet emelkedés perc/sec /°C */
+	unsigned int trend;		//**< Hőmérséklet emelkedés perc/sec /°C */
 	unsigned char trend_unit;	//**< Hőm. emelkedés mértékegység (sec/min) */
 	unsigned char pump_state;	//**< Szivattyú státusz (BE/KI)
-	unsigned char remain;		//**< Várható bekapcsolási idő (sec/min) */
+	unsigned int remain;		//**< Várható bekapcsolási idő (sec/min) */
 	unsigned char remain_unit;	//**< Várható felfűtés mértékegység */
 	unsigned char on_temp;		//**< Bekapcsolási hőfok */
 	unsigned char last_heat[5];	//**< Utolsó öt felfűtési időtartam */
@@ -78,10 +82,10 @@ void ScreenSelector(unsigned char);
 void ScreenRefresh(void);
 void ScreenSet_med_temp(unsigned char);
 void ScreenSet_koll_temp(unsigned char);
-void ScreenSet_trend(unsigned char);
+void ScreenSet_trend(unsigned int);
 void ScreenSet_trend_unit(unsigned char);
 void ScreenSet_pump_state(unsigned char);
-void ScreenSet_remain(unsigned char);
+void ScreenSet_remain(unsigned int);
 void ScreenSet_remain_unit(unsigned char);
 void ScreenSet_on_temp(unsigned char);
 void ScreenSet_last_heat(unsigned char *);

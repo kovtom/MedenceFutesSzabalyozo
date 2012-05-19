@@ -29,11 +29,7 @@ typedef struct TREND {
 
 void TrendInit(void);
 void TrendClear(void);
-unsigned char TrendGet(void);
+unsigned int TrendGet(void);
 unsigned char TrendGetUnit(void);
-
-//debug miatt kell
-unsigned long int TrendGetTimeStart(void);
-signed char TrendGetTempStart(void);
 
 #endif /* TREND_H_ */

@@ -12,16 +12,6 @@
 
 static TREND trend;
 
-#ifdef DEBUG
-unsigned long int TrendGetTimeStart(void) {
-	return trend.time_start;
-}
-
-signed char TrendGetTempStart(void) {
-	return trend.temp_start;
-}
-#endif
-
 /*!
  * \brief Hőmérséklet emelkedési trend inicializálása
  * \param void
@@ -39,6 +29,7 @@ void TrendInit(void) {
 void TrendClear(void) {
 	trend.time_start = TimeGetNow();
 	trend.temp_start = (signed char)TempGet(NAPKOLLEKTOR_CH);
+	trend.trend = TREND_OVERFLOW;
 }
 
 /*!
@@ -46,7 +37,7 @@ void TrendClear(void) {
  * \param void
  * \return trend.trend unsigned char
  */
-unsigned char TrendGet(void) {
+unsigned int TrendGet(void) {
 	unsigned long int time = TimeGetNow();
 	unsigned long int delta_time = (time - trend.time_start) / TICK_SEC;
 	signed char delta_temp = TempGet(NAPKOLLEKTOR_CH) - trend.temp_start;
@@ -62,7 +53,8 @@ unsigned char TrendGet(void) {
 		trend.trend = TREND_OVERFLOW;
 		trend.trend_unit = MIN;
 	}
-	return (unsigned char)trend.trend;
+//	return (unsigned char)trend.trend;
+	return trend.trend;
 }
 
 /*!

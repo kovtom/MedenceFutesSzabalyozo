@@ -20,7 +20,7 @@
 
 volatile static unsigned long int time;
 
-void InitTimer(void) {
+void TimerInit(void) {
 	TIMSK |= _BV(TOIE0);			//Timer overflow interrupt engedélyezés
 	TCCR0 |= PRESCALER_256;			//256-os osztóval indítjuk a Timer0-t
 	sei();							//Interrupt enable

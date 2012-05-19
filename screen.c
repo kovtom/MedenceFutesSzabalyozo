@@ -8,10 +8,11 @@
 #include "misc.h"
 #include "screen.h"
 #include "lcd.h"
-#include "adc.h"
 #include "trend.h"
 #include "remain.h"
 #include "tempmeasure.h"
+#include "eeprom.h"
+#include "setup.h"
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 
@@ -47,7 +48,9 @@ static const char string12[] PROGMEM = "BE\n";
 static const char string13[] PROGMEM = "KI\n";
 static const char string14[] PROGMEM = "S:";
 static const char string15[] PROGMEM = "R:";
-static const char string16[] PROGMEM = "T:";
+static const char string16[] PROGMEM = "T=";
+static const char string17[] PROGMEM = "**\n";
+static const char string18[] PROGMEM = "T>";
 
 
 /*!
@@ -71,7 +74,9 @@ PGM_P string_table[] PROGMEM =
 		string13,
 		string14,
 		string15,
-		string16
+		string16,
+		string17,
+		string18
 };
 
 volatile SCREEN screen;
@@ -101,15 +106,12 @@ void ScreenInit(void){
 	ScreenSet_koll_temp(TempGet(NAPKOLLEKTOR_CH));
 	ScreenSet_remain(REMAIN_MAX);
 	ScreenSet_remain_unit(MIN);
-	ScreenSet_on_temp(45);
+	ScreenSet_on_temp(SetupGetOnTemp());
 	screen.prev_selector = 0xFF;  //érvénytelen selector, hogy elsőre legyen kiirás
-
 	unsigned char tmp[5];
-	for(unsigned char i = 0; i < 5; i++) {
-		tmp[i] = i * 10;
-	}
+	EEPROMReadLastFive(tmp);
 	ScreenSet_last_heat(tmp);
-	ScreenSet_mode(ABSZOLUT);
+	ScreenSet_mode(SetupGetMode());
 }
 
 /*!
@@ -156,10 +158,12 @@ void ScreenRefresh(void) {
 		lcd_putc(' ');
 
 		lcd_puts_p(string_table[PUPM_STATE_S]); //S:ON
-		if(screen.pump_state) {
+		if(screen.pump_state == PUMP_ON) {
 			lcd_puts_p(string_table[BE_S]);
-		} else {
+		} else if(screen.pump_state == PUMP_OFF) {
 			lcd_puts_p(string_table[KI_S]);
+		} else {
+			lcd_puts_p(string_table[PUMP_ERROR_S]);
 		}
 
 		lcd_puts_p(string_table[NAPKOLL]);	//Napkoll:20°C
@@ -179,7 +183,11 @@ void ScreenRefresh(void) {
 		}
 		lcd_putc(' ');
 
-		lcd_puts_p(string_table[ON_TEMP_S]);						//T:20°C
+		if(SetupGetMode() == MODE_ABS) {				//T:20°C
+			lcd_puts_p(string_table[ON_TEMP_ABS_S]);
+		} else {
+			lcd_puts_p(string_table[ON_TEMP_KUL_S]);
+		}
 		itoa(screen.on_temp, buffer, 10);
 		if(screen.on_temp < 10) lcd_putc(' ');
 		lcd_puts(buffer);
@@ -232,7 +240,11 @@ void ScreenRefresh(void) {
  * \return none
  */
 void ScreenSet_med_temp(unsigned char value) {
-	screen.med_temp = value;
+	if(value > MED_TEMP_MAX) {
+		screen.med_temp = MED_TEMP_MAX;
+	} else {
+		screen.med_temp = value;
+	}
 }
 
 /*!
@@ -241,7 +253,11 @@ void ScreenSet_med_temp(unsigned char value) {
  * \return none
  */
 void ScreenSet_koll_temp(unsigned char value) {
-	screen.koll_temp = value;
+	if(value > NAPKOLL_TEMP_MAX) {
+		screen.koll_temp = NAPKOLL_TEMP_MAX;
+	} else {
+		screen.koll_temp = value;
+	}
 }
 
 /*!
@@ -249,9 +265,12 @@ void ScreenSet_koll_temp(unsigned char value) {
  * \param value unsigned char
  * \return none
  */
-void ScreenSet_trend(unsigned char value) {
-	if(value > TREND_MAX) value = TREND_MAX;
-	screen.trend = value;
+void ScreenSet_trend(unsigned int value) {
+	if(value > TREND_MAX) {
+		screen.trend = TREND_MAX;
+	} else {
+		screen.trend = value;
+	}
 }
 
 /*!
@@ -277,9 +296,12 @@ void ScreenSet_pump_state(unsigned char value) {
  * \param value unsigned char
  * \return none
  */
-void ScreenSet_remain(unsigned char value) {
-	if(value > REMAIN_MAX) value = REMAIN_MAX;
-	screen.remain = value;
+void ScreenSet_remain(unsigned int value) {
+	if(value > REMAIN_MAX) {
+		screen.remain = REMAIN_MAX;
+	} else {
+		screen.remain = value;
+	}
 }
 
 /*!
@@ -297,8 +319,11 @@ void ScreenSet_remain_unit(unsigned char value) {
  * \return none
  */
 void ScreenSet_on_temp(unsigned char value) {
-	if(value > ONTEMP_MAX) value = ONTEMP_MAX;
-	screen.on_temp = value;
+	if(value > ONTEMP_MAX) {
+		value = ONTEMP_MAX;
+	} else {
+		screen.on_temp = value;
+	}
 }
 
 /*!

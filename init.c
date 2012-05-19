@@ -12,6 +12,8 @@
 #include "trend.h"
 #include "setup.h"
 #include "remain.h"
+#include "eeprom.h"
+#include "pump.h"
 
 /*!
  * \brief Fő inicializáló függvény
@@ -19,9 +21,11 @@
  * \return none
  */
 void Init(void) {
-	InitTimer();
+	EEPROMInit();
+	TimerInit();
 	ADCInit();
 	SetupInit();
+	PumpInit();
 	RemainInit();
 	TrendInit();
 	ScreenInit();

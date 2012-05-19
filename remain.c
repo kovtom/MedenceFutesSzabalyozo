@@ -19,21 +19,22 @@ static REMAIN remain;
  * \return none
  */
 void RemainInit(void) {
-	remain.remain = REMAIN_MAX;
+	remain.remain = REMAIN_OVERFLOW;
 	remain.remain_unit = MIN;
 }
 
 /*!
  * \brief Bekapcsolásig hátralévő időt adja vissza.
  * \param void
- * \return remain.remain unsigned char
+ * \return remain.remain unsigned int
  */
-unsigned char RemainGet(void) {
+unsigned int RemainGet(void) {
 	signed char remain_temp;
 	if(SetupGetMode() == MODE_ABS) {
 		remain_temp = SetupGetOnTemp() - TempGet(NAPKOLLEKTOR_CH);
 	} else {
-		remain_temp = SetupGetOnTemp() - (TempGet(NAPKOLLEKTOR_CH) - TempGet(MEDENCE_CH));
+		remain_temp = SetupGetOnTemp() -
+					  (TempGet(NAPKOLLEKTOR_CH) - TempGet(MEDENCE_CH));
 	}
 	if(remain_temp >= 0) {
 		remain.remain = TrendGet() * remain_temp;
@@ -51,7 +52,7 @@ unsigned char RemainGet(void) {
 		remain.remain = 0;
 		remain.remain_unit = SEC;
 	}
-	return (unsigned char)remain.remain;
+	return remain.remain;
 }
 
 /*!
