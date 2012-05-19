@@ -15,6 +15,43 @@
 #include "eeprom.h"
 
 static PUMP pump;
+static OPERATIONTIME optime;
+
+/*!
+ * \brief Szivattyú day,hour stb... kiszámolása.
+ * \param void
+ * \return none
+ */
+static void PumpOpCalc(void) {
+	unsigned long int tmp = optime.all_time;
+	optime.day = tmp / 86400;
+	tmp = tmp % 86400;
+	optime.hour = tmp / 3600;
+	tmp = tmp % 3600;
+	optime.min = tmp / 60;
+	optime.sec = tmp % 60;
+}
+
+/*!
+ * \brief Szivattyú összes üzemállapot frissítése
+ * \param void
+ * \return none
+ */
+static void PumpOpTimeRefresh(void) {
+	if(optime.prev_pump_state == PUMP_OFF &&
+			PumpGetStatus() == PUMP_ON) {
+		optime.prev_time = TimeGetNow();
+		optime.prev_pump_state = PUMP_ON;
+	} else {
+		if(optime.prev_pump_state == PUMP_ON &&
+				PumpGetStatus() == PUMP_OFF) {
+			optime.all_time = optime.all_time +
+					(TimeGetNow() - optime.prev_time) / TICK_SEC;
+			PumpOpCalc();
+			optime.prev_pump_state = PUMP_OFF;
+		}
+	}
+}
 
 /*!
  * \brief Szivattyú állapotot inicializáció.
@@ -23,6 +60,7 @@ static PUMP pump;
  */
 void PumpInit(void) {
 	pump.status = PUMP_OFF;
+	optime.prev_pump_state = PUMP_OFF;
 }
 
 /*!
@@ -41,6 +79,7 @@ unsigned char PumpGetStatus(void) {
  */
 void PumpRefresh(void) {
 	signed char delta_temp;
+
 	//Ha az abs beállított kisebb mint a medence hőfok akkor emelünk egyet
 	//a beállított hőfokon.
 	if(TempGet(MEDENCE_CH) >= SetupGetOnTemp() &&
@@ -101,5 +140,53 @@ void PumpRefresh(void) {
 
 		}
 	}
+	PumpOpTimeRefresh();
 }
+
+/*!
+ * \brief Szivattyú összes üzem nap összetevő
+ * \param void
+ * \return optime.day unsigned int
+ */
+unsigned int PumpGetOpDay(void) {
+	return optime.day;
+}
+
+/*!
+ * \brief Szivattyú összes üzem óra összetevő
+ * \param void
+ * \return optime.hour unsigned char
+ */
+unsigned char PumpGetOpHour(void) {
+	return optime.hour;
+}
+
+/*!
+ * \brief Szivattyú összes üzem perc összetevő
+ * \param void
+ * \return optime.min unsigned char
+ */
+unsigned char PumpGetOpMin(void) {
+	return optime.min;
+}
+
+/*!
+ * \brief Szivattyú összes üzem másodperc összetevő
+ * \param void
+ * \return optime.sec unsigned char
+ */
+unsigned char PumpGetOpSec(void) {
+	return optime.sec;
+}
+
+
+
+
+
+
+
+
+
+
+
 

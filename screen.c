@@ -14,6 +14,7 @@
 #include "eeprom.h"
 #include "setup.h"
 #include "lastfiveheating.h"
+#include "pump.h"
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 
@@ -52,7 +53,9 @@ static const char string15[] PROGMEM = "R:";
 static const char string16[] PROGMEM = "T=";
 static const char string17[] PROGMEM = "**\n";
 static const char string18[] PROGMEM = "T>";
-
+static const char string19[] PROGMEM = "Szivattyu ossz. uzemido:\n";
+static const char string20[] PROGMEM = "d  ";
+static const char string21[] PROGMEM = "h  ";
 
 /*!
  * \brief Stringek tárolása program memóriában
@@ -77,7 +80,10 @@ PGM_P string_table[] PROGMEM =
 		string15,
 		string16,
 		string17,
-		string18
+		string18,
+		string19,
+		string20,
+		string21
 };
 
 volatile SCREEN screen;
@@ -230,6 +236,28 @@ void ScreenRefresh(void) {
 		lcd_putc(' ');
 		lcd_putc(LE_C);
 	}
+
+	else if(screen.selector == SCREEN_ALL_OP_TIME) {
+		lcd_puts_p(string_table[ALL_TIME_S]);			//Szivattyu ossz. uzemido:
+
+		itoa(PumpGetOpDay(), buffer, 10);
+		lcd_puts(buffer);
+		lcd_puts_p(string_table[DAY_S]);
+
+		itoa(PumpGetOpHour(), buffer, 10);
+		lcd_puts(buffer);
+		lcd_puts_p(string_table[HOUR_S]);
+
+		itoa(PumpGetOpMin(), buffer, 10);
+		lcd_puts(buffer);
+		lcd_putc(MIN_C1); lcd_putc(MIN_C2);
+		lcd_puts("  ");
+
+		itoa(PumpGetOpSec(), buffer, 10);
+		lcd_puts(buffer);
+		lcd_putc(SEC_C1); lcd_putc(SEC_C2);
+	}
+
 	else {
 		lcd_puts_p(string_table[ERROR_S]);
 	}

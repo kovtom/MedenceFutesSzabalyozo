@@ -49,6 +49,9 @@
 #define ON_TEMP_ABS_S 16 //**< 'T=' string */
 #define PUMP_ERROR_S 17 //**< '**\n' string */
 #define ON_TEMP_KUL_S 18 //**< 'T>' string */
+#define ALL_TIME_S 19 	//**< 'Szivattyú össz. üzemidő:\n' string */
+#define DAY_S 20		//**< 'd  ' string */
+#define HOUR_S 21		//**< 'h  ' string */
 
 #define DEFINED_CHAR 8	//**< Ennyi saját LCD karaktert definiálunk */
 

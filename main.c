@@ -39,8 +39,8 @@ int main(void) {
 
 		if(TimeGetNow() - prev_screen_time > visit_screen) {
 			if(screen == SCREEN_MAIN) {
-				screen = SCREEN_LASTFIVE;
-				visit_screen = 150;
+				screen = SCREEN_ALL_OP_TIME;
+				visit_screen = 300;
 			} else {
 				screen = SCREEN_MAIN;
 				visit_screen = 700;
