@@ -9,6 +9,8 @@
 #define MISC_H_
 
 #define DEBUG_TEMPMEASURE
+#define TRUE 1
+#define FALSE 0
 #define SCREEN_MAIN 0		//**< A fő képernyő */
 #define SCREEN_LASTFIVE 1	//**< Utolsó öt felfűtési idő képernyő */
 #define SCREEN_SET_MODE 2	//**< Beállítás fűtési mód képernyő */

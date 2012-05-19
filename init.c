@@ -14,7 +14,7 @@
 #include "remain.h"
 #include "eeprom.h"
 #include "pump.h"
-
+#include "lastfiveheating.h"
 /*!
  * \brief Fő inicializáló függvény
  * \param void
@@ -28,5 +28,6 @@ void Init(void) {
 	PumpInit();
 	RemainInit();
 	TrendInit();
+	LastHeatingInit();
 	ScreenInit();
 }

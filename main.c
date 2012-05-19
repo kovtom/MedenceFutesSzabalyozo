@@ -16,6 +16,7 @@
 #include "setup.h"
 #include "remain.h"
 #include "pump.h"
+#include "lastfiveheating.h"
 #include <avr/io.h>
 #include <stdlib.h>
 #include <util/delay.h>
@@ -30,8 +31,24 @@ int main(void) {
 
 	Init();
 
-	unsigned long int prev_time = 0;
 	for (;;) {
+		static unsigned char screen = SCREEN_MAIN;
+		static unsigned long int prev_time;
+		static unsigned long int prev_screen_time;
+		static unsigned int visit_screen = 700;
+
+		if(TimeGetNow() - prev_screen_time > visit_screen) {
+			if(screen == SCREEN_MAIN) {
+				screen = SCREEN_LASTFIVE;
+				visit_screen = 150;
+			} else {
+				screen = SCREEN_MAIN;
+				visit_screen = 700;
+			}
+			prev_screen_time = TimeGetNow();
+		}
+
+		ScreenSelector(screen);
 		ScreenRefresh();
 
 		ScreenSet_koll_temp(TempGet(NAPKOLLEKTOR_CH));
@@ -47,6 +64,11 @@ int main(void) {
 
 		PumpRefresh();
 		ScreenSet_pump_state(PumpGetStatus());
+
+		LastHeatingRefresh();
+		unsigned int tmp[5];
+		LastHeatingGet(tmp);
+		ScreenSet_last_heat(tmp);
 
 		//LED villogtatás
 		if(TimeGetNow() - prev_time > 50) {

@@ -8,7 +8,7 @@
 #ifndef PUMP_H_
 #define PUMP_H_
 
-#define PUMP_CHECK_TIME 5		//**< Ennyi időnként vizsgáljuk a szivattyút kikapcsolásra */
+#define PUMP_CHECK_TIME 20		//**< Ennyi időnként vizsgáljuk a szivattyút kikapcsolásra */
 
 typedef struct PUMP {
 	unsigned long int prev_time; //**< a kiértékeléshez szükséges menteni az adott időpontot */

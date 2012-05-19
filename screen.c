@@ -13,6 +13,7 @@
 #include "tempmeasure.h"
 #include "eeprom.h"
 #include "setup.h"
+#include "lastfiveheating.h"
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 
@@ -108,8 +109,8 @@ void ScreenInit(void){
 	ScreenSet_remain_unit(MIN);
 	ScreenSet_on_temp(SetupGetOnTemp());
 	screen.prev_selector = 0xFF;  //érvénytelen selector, hogy elsőre legyen kiirás
-	unsigned char tmp[5];
-	EEPROMReadLastFive(tmp);
+	unsigned int tmp[5];
+	LastHeatingGet(tmp);
 	ScreenSet_last_heat(tmp);
 	ScreenSet_mode(SetupGetMode());
 }
@@ -331,7 +332,7 @@ void ScreenSet_on_temp(unsigned char value) {
  * \param value unsigned char pointer
  * \return none
  */
-void ScreenSet_last_heat(unsigned char *value) {
+void ScreenSet_last_heat(unsigned int *value) {
 	for(unsigned char i = 0; i < 5; i++) {
 		screen.last_heat[i] = value[i];
 	}

@@ -21,7 +21,7 @@ static EEPROM_S EEMEM eeprom;
  * \return none
  */
 void EEPROMInit(void) {
-	unsigned char tmp[] = { 10, 20, 30, 34, 67 };
+	unsigned int tmp[] = { 10, 20, 30, 34, 67 };
 	EEPROMWriteMode(MODE_KUL);
 	EEPROMWriteOnTemp(20);
 	EEPROMWriteLastFive(tmp);
@@ -51,8 +51,10 @@ void EEPROMWriteOnTemp(unsigned char value) {
  * \param *value unsigned char pointer
  * \return none
  */
-void EEPROMWriteLastFive(unsigned char * value) {
-	eeprom_write_block(value, eeprom.last_five, 5);
+void EEPROMWriteLastFive(unsigned int * value) {
+	for(unsigned char i = 0; i < 5; i++) {
+		eeprom_update_word(&eeprom.last_five[i], value[i]);
+	}
 }
 
 /*!
@@ -87,8 +89,10 @@ unsigned char EEPROMReadOnTemp(void) {
  * \param *value unsigned char pointer
  * \return void
  */
-void EEPROMReadLastFive(unsigned char * value) {
-	eeprom_read_block(value, eeprom.last_five, 5 );
+void EEPROMReadLastFive(unsigned int * value) {
+	for(unsigned char i = 0; i < 5; i++) {
+		value[i] = eeprom_read_word(&eeprom.last_five[i]);
+	}
 }
 
 /*!

@@ -48,7 +48,7 @@ unsigned char TempGet(unsigned char channel) {
 	}
 #else
 	if(channel == NAPKOLLEKTOR_CH) {
-		if((TimeGetNow() - prev_koll_time)/50 > 1) {
+		if((TimeGetNow() - prev_koll_time)/50 > 6) {
 			prev_koll_time = TimeGetNow();
 			if(PumpGetStatus() == PUMP_OFF ||
 					PumpGetStatus() == PUMP_ERROR) {
@@ -61,10 +61,10 @@ unsigned char TempGet(unsigned char channel) {
 		}
 		return koll_temp;
 	} else {
-		if((TimeGetNow() - prev_med_time)/50 > 120) {
+		/*if((TimeGetNow() - prev_med_time)/50 > 360) {
 			med_temp++;
 			prev_med_time = TimeGetNow();
-		}
+		}*/
 		return med_temp;
 	}
 #endif
