@@ -9,6 +9,7 @@
 #include "tempmeasure.h"
 #include "misc.h"
 #include "adc.h"
+#include "timer.h"
 #include <avr/io.h>
 
 #ifdef DEBUG_TEMPMEASURE
@@ -20,15 +21,14 @@
 	static unsigned char med_temp = 21;
 #endif
 
+static TEMPMEASURE tempmeasure;
+
 /*!
- * \brief Hőmérséklet mérés
- *
- * Az eredményt Celsius fokban kapjuk vissza
- *
- * \param channel unsigned char channel
- * \return celsius unsigned int celsius fokra kerekítve
+ * \brief Privát függvény, mely visszaadja az aktuális hőmérsékletet
+ * \param channel unsigned char
+ * \return value unsigned char
  */
-unsigned char TempGet(unsigned char channel) {
+static unsigned char Tempmeasure(unsigned char channel) {
 #ifndef DEBUG_TEMPMEASURE
 	uint32_t measured = 0;
 	uint16_t celsius;
@@ -68,4 +68,37 @@ unsigned char TempGet(unsigned char channel) {
 		return med_temp;
 	}
 #endif
+}
+
+/*!
+ * \brief Kezdeti hőmérsékletek beállítása
+ * \param void
+ * \return none
+ */
+void TempmeasureInit(void) {
+	tempmeasure.med_temp = Tempmeasure(MEDENCE_CH);
+	tempmeasure.koll_temp = Tempmeasure(NAPKOLLEKTOR_CH);
+	tempmeasure.prev_time = TimeGetNow();
+}
+/*!
+ * \brief Hőmérséklet mérés
+ *
+ * Az eredményt Celsius fokban kapjuk vissza.
+ * Ha nem telt még el a DELAY_MEASURE akkor nem mérünk újra,
+ * csak visszaadjuk a tárolt értéket.
+ *
+ * \param channel unsigned char channel
+ * \return celsius unsigned int celsius fokra kerekítve
+ */
+unsigned char TempGet(unsigned char channel) {
+	if(TimeGetNow() - tempmeasure.prev_time > DELAY_MEASURE) {  //Eltelt már a késleltetés ideje?
+		tempmeasure.med_temp = Tempmeasure(MEDENCE_CH);			//ha igen akkor mérünk is és tárolunk
+		tempmeasure.koll_temp = Tempmeasure(NAPKOLLEKTOR_CH);
+		tempmeasure.prev_time = TimeGetNow();
+	}
+	if(channel == MEDENCE_CH) {							//Visszaadjuk a tárolt értéket
+		return tempmeasure.med_temp;
+	} else {
+		return tempmeasure.koll_temp;
+	}
 }

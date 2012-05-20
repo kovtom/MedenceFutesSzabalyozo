@@ -31,6 +31,10 @@
 #define B_OK				8				//**< OK értéke a button-ban */
 #define MENU_TIMEOUT		500				//**< /50 másodperc a timeout */
 
+#define BUTTON_BEEP_DIR		DDRD			//**< Piezo DIR regiszter */
+#define BUTTON_BEEP_PORT	PORTD			//**< Piezo PORT */
+#define BUTTON_BEEP			PD4				//**< Piezo pin */
+
 /*!
  * \brief Nyomógombok állapotát tároló struktúra.
  */
@@ -43,5 +47,6 @@ typedef struct BUTTON {
 void ButtonInit(void);
 unsigned char ButtonGet(void);
 void ButtonMenu(void);
+void ButtonBeep(unsigned char);
 
 #endif /* BUTTON_H_ */

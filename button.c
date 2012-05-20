@@ -12,6 +12,7 @@
 #include "setup.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 volatile static BUTTON button;
 
@@ -21,6 +22,8 @@ volatile static BUTTON button;
  * \return none
  */
 void ButtonInit(void) {
+	BUTTON_BEEP_DIR |= _BV(BUTTON_BEEP);	//Piezo output
+
 	BUTTON_MENU_PORT |= _BV(BUTTON_MENU);  //Pull-up enable
 	BUTTON_UP_PORT |= _BV(BUTTON_UP);
 	BUTTON_DOWN_PORT |= _BV(BUTTON_DOWN);
@@ -43,6 +46,7 @@ void ButtonInit(void) {
 
 void ButtonMenu(void){
 	if(button.button) {								//Volt nyomógomb?
+		ButtonBeep(1);
 		button.prev_menu_time = TimeGetNow();		//Akkor volt aktivitás, timeout reset
 		unsigned char tmp = ButtonGet();
 		if(tmp == B_MENU) {				//Ha MENU volt akkor leptejuk a screen-t
@@ -104,13 +108,35 @@ unsigned char ButtonGet(void) {
  * \return none
  */
 ISR(INT0_vect) {
-	if(TimeGetNow() - button.prev_prell_time > 20) {
-		//button.button |= _BV(4);
+	if(TimeGetNow() - button.prev_prell_time > 15) {
 		if(bit_is_clear(BUTTON_MENU_PIN, BUTTON_MENU)) button.button |= _BV(0);
 		if(bit_is_clear(BUTTON_UP_PIN, BUTTON_UP)) button.button |= _BV(1);
 		if(bit_is_clear(BUTTON_DOWN_PIN, BUTTON_DOWN)) button.button |= _BV(2);
 		if(bit_is_clear(BUTTON_OK_PIN, BUTTON_OK)) button.button |= _BV(3);
 		button.prev_prell_time = TimeGetNow();
 	}
-
 }
+
+/*!
+ * \brief Hang a nyomógombhoz.
+ *
+ * Bemenet, hogy hányszor játsszuk le a beep-et.
+ *
+ * \param value unsigned char
+ * \return none
+ */
+void ButtonBeep(unsigned char value) {
+	for(unsigned char j = 0; j < value; j++) {
+		for(unsigned char i = 0; i < 25; i++) {
+			BUTTON_BEEP_PORT |= _BV(BUTTON_BEEP);
+			_delay_us(500);
+			BUTTON_BEEP_PORT &= ~_BV(BUTTON_BEEP);
+			_delay_us(500);
+		}
+	}
+}
+
+
+
+
+

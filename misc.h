@@ -8,7 +8,7 @@
 #ifndef MISC_H_
 #define MISC_H_
 
-#define DEBUG_TEMPMEASURE
+//#define DEBUG_TEMPMEASURE
 #define TRUE 1
 #define FALSE 0
 #define SCREEN_MAIN 0		//**< A fő képernyő */

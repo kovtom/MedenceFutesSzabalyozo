@@ -16,6 +16,7 @@
 #include "pump.h"
 #include "lastfiveheating.h"
 #include "button.h"
+#include "tempmeasure.h"
 
 /*!
  * \brief Fő inicializáló függvény
@@ -26,6 +27,7 @@ void Init(void) {
 	EEPROMInit();
 	TimerInit();
 	ADCInit();
+	TempmeasureInit();
 	SetupInit();
 	PumpInit();
 	RemainInit();

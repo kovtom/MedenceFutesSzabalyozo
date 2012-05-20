@@ -8,7 +8,10 @@
 #ifndef PUMP_H_
 #define PUMP_H_
 
-#define PUMP_CHECK_TIME 20		//**< Ennyi időnként vizsgáljuk a szivattyút kikapcsolásra */
+#define PUMP_CHECK_TIME 60		//**< Ennyi időnként vizsgáljuk a szivattyút kikapcsolásra */
+#define PUMP_RELAY_DIR DDRD			//**< Szivattyú relé DIR reg. */
+#define PUMP_RELAY_PORT PORTD			//**< Szivattyú relé PORT */
+#define PUMP_RELAY PD3				//**< Szivattyú PIN */
 
 typedef struct PUMP {
 	unsigned long int prev_time; //**< a kiértékeléshez szükséges menteni az adott időpontot */

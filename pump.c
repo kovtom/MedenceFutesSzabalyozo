@@ -13,6 +13,8 @@
 #include "trend.h"
 #include "remain.h"
 #include "eeprom.h"
+#include "button.h"
+#include <avr/io.h>
 
 static PUMP pump;
 static OPERATIONTIME optime;
@@ -59,6 +61,7 @@ static void PumpOpTimeRefresh(void) {
  * \return none
  */
 void PumpInit(void) {
+	PUMP_RELAY_DIR |= _BV(PUMP_RELAY);
 	pump.status = PUMP_OFF;
 	optime.prev_pump_state = PUMP_OFF;
 }
@@ -85,6 +88,7 @@ void PumpRefresh(void) {
 	if(TempGet(MEDENCE_CH) >= SetupGetOnTemp() &&
 			SetupGetMode() == MODE_ABS) {
 		//SZIVATTYÚ KI
+		PUMP_RELAY_PORT &= ~_BV(PUMP_RELAY);
 		pump.status = PUMP_ERROR;
 		unsigned char tmp;
 		tmp = SetupGetOnTemp();
@@ -98,6 +102,7 @@ void PumpRefresh(void) {
 	if(SetupGetMode() == MODE_KUL &&
 			(SetupGetOnTemp() + TempGet(MEDENCE_CH)) > 99 ) {
 		//SZIVATTYÚ KI
+		PUMP_RELAY_PORT &= ~_BV(PUMP_RELAY);
 		pump.status = PUMP_ERROR;
 		unsigned char tmp;
 		tmp = SetupGetOnTemp();
@@ -124,6 +129,8 @@ void PumpRefresh(void) {
 					TempGet(NAPKOLLEKTOR_CH) == (pump.prev_temp - 1) ||
 					TempGet(NAPKOLLEKTOR_CH) < TempGet(MEDENCE_CH)) {
 				//SZIVATTYÚ KI
+				PUMP_RELAY_PORT &= ~_BV(PUMP_RELAY);
+				ButtonBeep(3);
 				pump.status = PUMP_OFF;
 				TrendClear();
 			} else {
@@ -136,6 +143,8 @@ void PumpRefresh(void) {
 			pump.prev_time = TimeGetNow();
 			pump.prev_temp = TempGet(NAPKOLLEKTOR_CH);
 			//SZIVATTYÚ BE
+			PUMP_RELAY_PORT |= _BV(PUMP_RELAY);
+			ButtonBeep(3);
 			pump.status = PUMP_ON;
 
 		}
