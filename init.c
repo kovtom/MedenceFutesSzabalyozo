@@ -15,6 +15,8 @@
 #include "eeprom.h"
 #include "pump.h"
 #include "lastfiveheating.h"
+#include "button.h"
+
 /*!
  * \brief Fő inicializáló függvény
  * \param void
@@ -30,4 +32,5 @@ void Init(void) {
 	TrendInit();
 	LastHeatingInit();
 	ScreenInit();
+	ButtonInit();
 }

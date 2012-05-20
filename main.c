@@ -17,38 +17,26 @@
 #include "remain.h"
 #include "pump.h"
 #include "lastfiveheating.h"
+#include "button.h"
 #include <avr/io.h>
 #include <stdlib.h>
 #include <util/delay.h>
 
 #define LED_DIR DDRA
 #define LED_PORT PORTA
-#define LED_PIN PA0
+#define LED PA0
 
 int main(void) {
 
-	LED_DIR |= _BV(LED_PIN);
+	LED_DIR |= _BV(LED); //LED init
 
 	Init();
 
 	for (;;) {
-		static unsigned char screen = SCREEN_MAIN;
 		static unsigned long int prev_time;
-		static unsigned long int prev_screen_time;
-		static unsigned int visit_screen = 700;
+		static unsigned char visit_led;
+		static unsigned char led_status;
 
-		if(TimeGetNow() - prev_screen_time > visit_screen) {
-			if(screen == SCREEN_MAIN) {
-				screen = SCREEN_ALL_OP_TIME;
-				visit_screen = 300;
-			} else {
-				screen = SCREEN_MAIN;
-				visit_screen = 700;
-			}
-			prev_screen_time = TimeGetNow();
-		}
-
-		ScreenSelector(screen);
 		ScreenRefresh();
 
 		ScreenSet_koll_temp(TempGet(NAPKOLLEKTOR_CH));
@@ -56,8 +44,6 @@ int main(void) {
 
 		ScreenSet_trend(TrendGet());
 		ScreenSet_trend_unit(TrendGetUnit());
-
-		ScreenSet_on_temp(SetupGetOnTemp());
 
 		ScreenSet_remain(RemainGet());
 		ScreenSet_remain_unit(RemainGetUnit());
@@ -70,14 +56,23 @@ int main(void) {
 		LastHeatingGet(tmp);
 		ScreenSet_last_heat(tmp);
 
-		//LED villogtatás
-		if(TimeGetNow() - prev_time > 50) {
-			LED_PORT |= _BV(LED_PIN);
-			prev_time = TimeGetNow();
-		}
-		_delay_ms(10);
-		LED_PORT &= ~_BV(LED_PIN);
-	}
+		ScreenSet_mode(SetupGetMode());
+		ScreenSet_on_temp(SetupGetOnTemp());
 
+		ButtonMenu();
+
+		//LED villogtatás
+		if(TimeGetNow() - prev_time > visit_led) {
+			if(led_status) {
+				LED_PORT |= _BV(LED);
+				visit_led = 1;
+			} else {
+				LED_PORT &= ~_BV(LED);
+				visit_led = 49;
+			}
+			prev_time =TimeGetNow();
+			led_status = !led_status;
+		}
+	}
 	return 0;
 }

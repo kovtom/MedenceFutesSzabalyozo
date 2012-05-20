@@ -53,6 +53,8 @@
 #define DAY_S 20		//**< 'd  ' string */
 #define HOUR_S 21		//**< 'h  ' string */
 
+#define SELECTOR_MAX 5	//**< Ennyi screen-ünk van */
+
 #define DEFINED_CHAR 8	//**< Ennyi saját LCD karaktert definiálunk */
 
 #define ONTEMP_MAX 99	//**< Az on_temp érték maximuma */
@@ -82,6 +84,8 @@ typedef struct SCREEN {
 
 void ScreenInit(void);
 void ScreenSelector(unsigned char);
+void ScreenNextSelector(void);
+unsigned char ScreenGetSelector(void);
 void ScreenRefresh(void);
 void ScreenSet_med_temp(unsigned char);
 void ScreenSet_koll_temp(unsigned char);

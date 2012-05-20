@@ -131,6 +131,28 @@ void ScreenSelector(unsigned char value) {
 }
 
 /*!
+ * \brief Következő képernyő beállítása.
+ * \param void
+ * \return none
+ */
+void ScreenNextSelector(void) {
+	if(screen.selector == 4) {
+		screen.selector = 0;
+	} else {
+		screen.selector++;
+	}
+}
+
+/*!
+ * \brief Screen értékének visszaadása.
+ * \param void
+ * \return screen.selector unsigned char
+ */
+unsigned char ScreenGetSelector(void) {
+	return screen.selector;
+}
+
+/*!
  * \brief Screen kiirasa LCD-re
  * \param void
  * \return none
@@ -218,6 +240,7 @@ void ScreenRefresh(void) {
 		lcd_puts_p(string_table[BEKAPCSMOD]);
 		if(screen.mode) {
 			lcd_puts_p(string_table[ABSZOLUT]);
+			lcd_putc(' ');
 		} else {
 			lcd_puts_p(string_table[KULONBSEG]);
 		}
