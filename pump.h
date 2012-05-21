@@ -12,6 +12,7 @@
 #define PUMP_RELAY_DIR DDRD			//**< Szivattyú relé DIR reg. */
 #define PUMP_RELAY_PORT PORTD			//**< Szivattyú relé PORT */
 #define PUMP_RELAY PD3				//**< Szivattyú PIN */
+#define PUMP_SAVE_TIME  300		//**< Ennyi időnként mentünk sec */
 
 typedef struct PUMP {
 	unsigned long int prev_time; //**< a kiértékeléshez szükséges menteni az adott időpontot */
@@ -27,17 +28,16 @@ typedef struct OPERATIONTIME {
 	unsigned char hour;				//**< teljes üzemidő óra összetevő */
 	unsigned char min;				//**< teljes üzemidő perc összetevő */
 	unsigned char sec;				//**< teljes üzemidő másodperc összetevő */
+	unsigned long int last_save_time; //**< az utolsó mentés az EEPROM-ba (all_time) */
 
 }OPERATIONTIME;
 
 void PumpInit(void);
 void PumpRefresh(void);
 unsigned char PumpGetStatus(void);
-//static void PumpOpTimeRefresh(void);
 unsigned int PumpGetOpDay(void);
 unsigned char PumpGetOpHour(void);
 unsigned char PumpGetOpMin(void);
 unsigned char PumpGetOpSec(void);
-//static void PumpOpCalc(void);
 
 #endif /* PUMP_H_ */

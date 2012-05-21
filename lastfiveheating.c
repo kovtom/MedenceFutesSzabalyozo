@@ -10,8 +10,22 @@
 #include "eeprom.h"
 #include "timer.h"
 #include "pump.h"
+#include "button.h"
 
 LASTHEATING lastheating;
+
+/*!
+ * \brief Felfűtési idők mentése az EEPROM-ba.
+ * \param void
+ * \return none
+ */
+static void LastHeatingSaveData(void) {
+	if((TimeGetNow() - lastheating.last_save_time) / TICK_SEC > LASTHEAT_SAVE_TIME) {
+		lastheating.last_save_time = TimeGetNow();
+		EEPROMWriteLastFive(lastheating.heating_time);
+		ButtonBeep(20);
+	}
+}
 
 /*!
  * \brief LastHeating inicializálás.
@@ -61,6 +75,7 @@ void LastHeatingRefresh(void) {
 			}
 		}
 	}
+	LastHeatingSaveData();
 }
 
 /*!

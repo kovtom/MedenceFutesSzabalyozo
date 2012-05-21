@@ -56,6 +56,23 @@ static void PumpOpTimeRefresh(void) {
 }
 
 /*!
+ * \brief Szivattyú all_time mentése.
+ *
+ * PUMP_SAVE_TIME időnként mentjük az EEPROM-ba a szivattyú összes
+ * üzemidejét.
+ *
+ * \param void
+ * \return none
+ */
+static void PumpSaveAllTime(void) {
+	if((TimeGetNow() - optime.last_save_time) / TICK_SEC > PUMP_SAVE_TIME) {
+		optime.last_save_time = TimeGetNow();
+		EEPROMWriteTotalPumpTime(optime.all_time);
+		ButtonBeep(20);
+	}
+}
+
+/*!
  * \brief Szivattyú állapotot inicializáció.
  * \param void
  * \return none
@@ -120,6 +137,7 @@ void PumpRefresh(void) {
 		}
 	}
 	PumpOpTimeRefresh();
+	PumpSaveAllTime();
 }
 
 /*!

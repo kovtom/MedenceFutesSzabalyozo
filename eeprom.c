@@ -21,9 +21,6 @@ static EEPROM_S EEMEM eeprom;
  * \return none
  */
 void EEPROMInit(void) {
-	unsigned int tmp[] = { 10, 20, 30, 34, 67 };
-	EEPROMWriteLastFive(tmp);
-	EEPROMWriteTotalPumpTime(5420);
 }
 
 /*!
