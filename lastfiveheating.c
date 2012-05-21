@@ -87,7 +87,17 @@ unsigned int * LastHeatingGet(void) {
 	return lastheating.heating_time;
 }
 
-
+/*!
+ * \brief LastHeating adatok törlése
+ * \param void
+ * \return none
+ */
+void LastHeatingClear(void) {
+	for(unsigned char i = 0; i < 5; i++) {
+		lastheating.heating_time[i] = 999;
+	}
+	EEPROMWriteLastFive(lastheating.heating_time);
+}
 
 
 

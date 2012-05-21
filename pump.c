@@ -176,7 +176,16 @@ unsigned char PumpGetOpSec(void) {
 	return optime.sec;
 }
 
-
+/*!
+ * \brief Szivattyú összes üzemidő törlése.
+ * \param void
+ * \return none
+ */
+void PumpAllTimeClear(void) {
+	optime.all_time = 0;
+	PumpOpCalc();
+	EEPROMWriteTotalPumpTime(optime.all_time);
+}
 
 
 

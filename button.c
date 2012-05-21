@@ -10,6 +10,8 @@
 #include "screen.h"
 #include "misc.h"
 #include "setup.h"
+#include "pump.h"
+#include "lastfiveheating.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -82,6 +84,11 @@ void ButtonMenu(void){
 				unsigned char tmp = SetupGetTmpOnTemp();
 				tmp--;
 				SetupWriteTmpOnTemp(tmp);
+			}
+			else if(tmp == B_OK && ScreenGetSelector() == SCREEN_SET_SAVED_CLR) { //Clear data
+				LastHeatingClear();
+				PumpAllTimeClear();
+				ButtonBeep(10);
 			}
 		}
 	} else {

@@ -12,18 +12,6 @@
 static EEPROM_S EEMEM eeprom;
 
 /*!
- * \brief EEPROM Inicializálás
- *
- * EEPROM alap adatokkal való feltöltése. Csak a fejlesztés során használjuk
- * majd.
- *
- * \param void
- * \return none
- */
-void EEPROMInit(void) {
-}
-
-/*!
  * \brief EEPROM-ba bekapcsolási metódus
  * \param value unsigned char
  * \return none
@@ -99,10 +87,41 @@ unsigned long int EEPROMReadTotalPumpTime(void) {
 	return eeprom_read_dword(&eeprom.total_pump_time);
 }
 
+/*!
+ * \brief EEPROM-ból Napkollektor szenzor korrekció.
+ * \param void
+ * \return eeprom.koll_diff unsigned char
+ */
+unsigned char EEPROMReadKollDiff(void) {
+	return eeprom_read_byte(&eeprom.koll_diff);
+}
 
+/*!
+ * \brief EEPROM-ból Medence szenzor korrekció.
+ * \param void
+ * \return eeprom.med_diff unsigned char
+ */
+unsigned char EEPROMReadMedDiff(void) {
+	return eeprom_read_byte(&eeprom.med_diff);
+}
 
+/*!
+ * \brief EEPROM-ba Napkollektor szenzor korrekció.
+ * \param value unsigned char
+ * \return none
+ */
+void EEPROMWriteKollDiff(unsigned char value) {
+	eeprom_update_byte(&eeprom.koll_diff, value);
+}
 
-
+/*!
+ * \brief EEPROM-ba Medence szenzor korrekció.
+ * \param value unsigned char
+ * \return none
+ */
+void EEPROMWriteMedDiff(unsigned char value) {
+	eeprom_update_byte(&eeprom.med_diff, value);
+}
 
 
 

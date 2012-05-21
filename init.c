@@ -12,7 +12,6 @@
 #include "trend.h"
 #include "setup.h"
 #include "remain.h"
-#include "eeprom.h"
 #include "pump.h"
 #include "lastfiveheating.h"
 #include "button.h"
@@ -24,7 +23,6 @@
  * \return none
  */
 void Init(void) {
-	EEPROMInit();
 	TimerInit();
 	ADCInit();
 	TempmeasureInit();

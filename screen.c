@@ -56,6 +56,7 @@ static const char string18[] PROGMEM = "T>";
 static const char string19[] PROGMEM = "Szivattyu ossz. uzemido:\n";
 static const char string20[] PROGMEM = "d  ";
 static const char string21[] PROGMEM = "h  ";
+static const char string22[] PROGMEM = "Mentett adatok torlese:\nOssz.uzem/Utolso f. <OK>";
 
 /*!
  * \brief Stringek tárolása program memóriában
@@ -83,7 +84,8 @@ PGM_P string_table[] PROGMEM =
 		string18,
 		string19,
 		string20,
-		string21
+		string21,
+		string22
 };
 
 volatile SCREEN screen;
@@ -124,7 +126,7 @@ void ScreenSelector(unsigned char value) {
  * \return none
  */
 void ScreenNextSelector(void) {
-	if(screen.selector == 4) {
+	if(screen.selector == SCREEN_NUMBER) {
 		screen.selector = 0;
 	} else {
 		screen.selector++;
@@ -273,6 +275,10 @@ void ScreenRefresh(void) {
 		itoa(PumpGetOpSec(), buffer, 10);
 		lcd_puts(buffer);
 		lcd_putc(SEC_C1); lcd_putc(SEC_C2);
+	}
+
+	else if(screen.selector == SCREEN_SET_SAVED_CLR){
+		lcd_puts_p(string_table[SETUP_SAVED_CLEAR]);
 	}
 
 	else {

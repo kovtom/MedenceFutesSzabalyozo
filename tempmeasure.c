@@ -44,6 +44,7 @@ static unsigned char Tempmeasure(unsigned char channel) {
 	if(channel == MEDENCE_CH) {
 		return 21;
 	} else {
+		celsius = (signed char)celsius + tempmeasure.koll_temp_diff; //hozzáadjuk a korrekciót
 		return (unsigned char)celsius;
 	}
 #else
@@ -79,6 +80,7 @@ void TempmeasureInit(void) {
 	tempmeasure.med_temp = Tempmeasure(MEDENCE_CH);
 	tempmeasure.koll_temp = Tempmeasure(NAPKOLLEKTOR_CH);
 	tempmeasure.prev_time = TimeGetNow();
+	tempmeasure.koll_temp_diff = 0;
 }
 /*!
  * \brief Hőmérséklet mérés

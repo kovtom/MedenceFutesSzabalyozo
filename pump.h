@@ -33,6 +33,7 @@ typedef struct OPERATIONTIME {
 }OPERATIONTIME;
 
 void PumpInit(void);
+void PumpAllTimeClear(void);
 void PumpRefresh(void);
 unsigned char PumpGetStatus(void);
 unsigned int PumpGetOpDay(void);

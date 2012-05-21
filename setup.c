@@ -17,10 +17,10 @@ static SETUP setup;
  * \return none
  */
 void SetupInit(void) {
-	setup.setup_valid_on_temp = EEPROMReadOnTemp();
-	setup.setup_valid_mode = EEPROMReadMode();
-	setup.setup_tmp_mode = setup.setup_valid_mode;
-	setup.setup_tmp_on_temp = setup.setup_valid_on_temp;
+	setup.valid_on_temp = EEPROMReadOnTemp();
+	setup.valid_mode = EEPROMReadMode();
+	setup.tmp_mode = setup.valid_mode;
+	setup.tmp_on_temp = setup.valid_on_temp;
 }
 
 /*!
@@ -29,7 +29,7 @@ void SetupInit(void) {
  * \return setup.setup_tmp_mode unsigned char
  */
 unsigned char SetupGetTmpMode(void) {
-	return setup.setup_tmp_mode;
+	return setup.tmp_mode;
 }
 
 /*!
@@ -38,7 +38,7 @@ unsigned char SetupGetTmpMode(void) {
  * \return setup.setup_on_temp unsigned char
  */
 unsigned char SetupGetTmpOnTemp(void) {
-	return setup.setup_tmp_on_temp;
+	return setup.tmp_on_temp;
 }
 
 /*!
@@ -47,7 +47,7 @@ unsigned char SetupGetTmpOnTemp(void) {
  * \return setup.setup_mode unsigned char
  */
 unsigned char SetupGetMode(void) {
-	return setup.setup_valid_mode;
+	return setup.valid_mode;
 }
 
 /*!
@@ -56,8 +56,27 @@ unsigned char SetupGetMode(void) {
  * \return setup.setup_on_temp unsigned char
  */
 unsigned char SetupGetOnTemp(void) {
-	return setup.setup_valid_on_temp;
+	return setup.valid_on_temp;
 }
+
+/*!
+ * \brief Napkolletor szenzor korrekció értékét adja vissza.
+ * \param void
+ * \return setup.koll_diff signed char
+ */
+signed char SetupGetKollDiff(void) {
+	return setup.koll_diff;
+}
+
+/*!
+ * \brief Medence szenzor korrekció értékét adja vissza.
+ * \param void
+ * \return setup.med_diff signed char
+ */
+signed char SetupGetMedDiff(void) {
+	return setup.med_diff;
+}
+
 
 /*!
  * \brief Bekapcsolási mód változtatása.
@@ -65,7 +84,7 @@ unsigned char SetupGetOnTemp(void) {
  * \return none
  */
 void SetupWriteTmpMode(unsigned char value) {
-	setup.setup_tmp_mode = value;
+	setup.tmp_mode = value;
 }
 
 /*!
@@ -74,7 +93,7 @@ void SetupWriteTmpMode(unsigned char value) {
  * \return none
  */
 void SetupWriteTmpOnTemp(unsigned char value) {
-	setup.setup_tmp_on_temp = value;
+	setup.tmp_on_temp = value;
 }
 
 /*!
@@ -83,8 +102,8 @@ void SetupWriteTmpOnTemp(unsigned char value) {
  * \return none
  */
 void SetupWriteMode(void) {
-	setup.setup_valid_mode = setup.setup_tmp_mode;
-	EEPROMWriteMode(setup.setup_valid_mode);
+	setup.valid_mode = setup.tmp_mode;
+	EEPROMWriteMode(setup.valid_mode);
 }
 
 /*!
@@ -93,8 +112,42 @@ void SetupWriteMode(void) {
  * \return none
  */
 void SetupWriteOnTemp(void) {
-	setup.setup_valid_on_temp = setup.setup_tmp_on_temp;
-	EEPROMWriteOnTemp(setup.setup_valid_on_temp);
+	setup.valid_on_temp = setup.tmp_on_temp;
+	EEPROMWriteOnTemp(setup.valid_on_temp);
+}
+
+/*!
+ * \brief Napkolletor szenzor korrekció beállítása.
+ *
+ * Maximum +-15 °C-fok eltérítés engedünk.
+ *
+ * \param value signed char
+ * \return none
+ */
+void SetupWriteKollDiff(signed char value, unsigned char save) {
+	if(value > 15) value = 15;
+	if(value < -15) value = -15;
+	setup.koll_diff = value;
+	if(save == WRITE_TO_EEPROM) {
+		EEPROMWriteKollDiff((unsigned char)setup.koll_diff);
+	}
+}
+
+/*!
+ * \brief Medence szenzor korrekció beállítása.
+ *
+ * Maximum +-15 °C-fok eltérítés engedünk.
+ *
+ * \param value signed char
+ * \return none
+ */
+void SetupWriteMedDiff(signed char value, unsigned char save) {
+	if(value > 15) value = 15;
+	if(value < -15) value = -15;
+	setup.med_diff = value;
+	if(save == WRITE_TO_EEPROM) {
+		EEPROMWriteMedDiff((unsigned char)setup.med_diff);
+	}
 }
 
 /*!
@@ -107,6 +160,6 @@ void SetupWriteOnTemp(void) {
  * \return none
  */
 void SetupUndo(void) {
-	setup.setup_tmp_mode = setup.setup_valid_mode;
-	setup.setup_tmp_on_temp = setup.setup_valid_on_temp;
+	setup.tmp_mode = setup.valid_mode;
+	setup.tmp_on_temp = setup.valid_on_temp;
 }

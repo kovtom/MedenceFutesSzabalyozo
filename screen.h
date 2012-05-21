@@ -52,6 +52,7 @@
 #define ALL_TIME_S 19 	//**< 'Szivattyú össz. üzemidő:\n' string */
 #define DAY_S 20		//**< 'd  ' string */
 #define HOUR_S 21		//**< 'h  ' string */
+#define SETUP_SAVED_CLEAR 22 //**< 'Mentett adatok torlese:\n Ossz. uzem/Utolso felf.' */
 
 #define SELECTOR_MAX 5	//**< Ennyi screen-ünk van */
 
