@@ -106,19 +106,7 @@ void ScreenInit(void){
 	}
 	lcd_clrscr();											//clear LCD
 	ScreenSelector(SCREEN_MAIN);   //kezdeti screen adatok beállítása
-	ScreenSet_med_temp(TempGet(MEDENCE_CH));
-	ScreenSet_trend(TrendGet());
-	ScreenSet_trend_unit(TrendGetUnit());
-	ScreenSet_pump_state(PUMP_OFF);
-	ScreenSet_koll_temp(TempGet(NAPKOLLEKTOR_CH));
-	ScreenSet_remain(REMAIN_MAX);
-	ScreenSet_remain_unit(MIN);
-	ScreenSet_on_temp(SetupGetOnTemp());
 	screen.prev_selector = 0xFF;  //érvénytelen selector, hogy elsőre legyen kiirás
-	unsigned int tmp[5];
-	LastHeatingGet(tmp);
-	ScreenSet_last_heat(tmp);
-	ScreenSet_mode(SetupGetMode());
 }
 
 /*!
@@ -168,16 +156,18 @@ void ScreenRefresh(void) {
 
 	if(screen.selector == SCREEN_MAIN) {
 		lcd_puts_p(string_table[MEDENCE]);	//Medence:20°C
-		itoa(screen.med_temp, buffer, 10);
+		itoa(TempGet(MEDENCE_CH), buffer, 10);
 		lcd_puts(buffer);
 		lcd_putc(CELSIUS_C);
 		lcd_putc(' ');
 
 		lcd_putc(FELNYIL);					//^12min/°C
-		itoa(screen.trend, buffer, 10);
-		if(screen.trend < 10) lcd_putc(' '); //ha a számérték egy számjegyű elé
+		signed char trend = TrendGet();
+		if(trend < 0 || trend > 99) trend = 99;
+		itoa(trend, buffer, 10);
+		if(trend < 10) lcd_putc(' '); //ha a számérték egy számjegyű elé
 		lcd_puts(buffer);					 //teszünk egy space-t
-		if(screen.trend_unit) {				//mértékegység választása
+		if(TrendGetUnit() == MIN) {				//mértékegység választása
 			LCD_PUTS_MIN;
 		} else {
 			LCD_PUTS_SEC;
@@ -187,25 +177,27 @@ void ScreenRefresh(void) {
 		lcd_putc(' ');
 
 		lcd_puts_p(string_table[PUPM_STATE_S]); //S:ON
-		if(screen.pump_state == PUMP_ON) {
+		if(PumpGetStatus() == PUMP_ON) {
 			lcd_puts_p(string_table[BE_S]);
-		} else if(screen.pump_state == PUMP_OFF) {
+		} else if(PumpGetStatus() == PUMP_OFF) {
 			lcd_puts_p(string_table[KI_S]);
 		} else {
 			lcd_puts_p(string_table[PUMP_ERROR_S]);
 		}
 
 		lcd_puts_p(string_table[NAPKOLL]);	//Napkoll:20°C
-		itoa(screen.koll_temp, buffer, 10);
+		itoa(TempGet(NAPKOLLEKTOR_CH), buffer, 10);
 		lcd_puts(buffer);
 		lcd_putc(CELSIUS_C);
 		lcd_putc(' ');
 
 		lcd_puts_p(string_table[REMAIN_S]);						//R:20min
-		itoa(screen.remain, buffer, 10);
-		if(screen.remain < 10) lcd_putc(' ');	//ha a számérték egy számjegyű
+		signed char remain = RemainGet();
+		if(remain < 0 || remain > 99) remain = 99;
+		itoa(remain, buffer, 10);
+		if(remain < 10) lcd_putc(' ');	//ha a számérték egy számjegyű
 		lcd_puts(buffer);						//akkor elé teszünk egy space-t
-		if(screen.remain_unit) {
+		if(RemainGetUnit() == MIN) {
 			LCD_PUTS_MIN;
 		} else {
 			LCD_PUTS_SEC;
@@ -217,16 +209,18 @@ void ScreenRefresh(void) {
 		} else {
 			lcd_puts_p(string_table[ON_TEMP_KUL_S]);
 		}
-		itoa(screen.on_temp, buffer, 10);
-		if(screen.on_temp < 10) lcd_putc(' ');
+		itoa(SetupGetOnTemp(), buffer, 10);
+		if(SetupGetOnTemp() < 10) lcd_putc(' ');
 		lcd_puts(buffer);
 		lcd_putc(CELSIUS_C);
 	}
 
 	else if(screen.selector == SCREEN_LASTFIVE) {
 		lcd_puts_p(string_table[UTOLSO_5]); lcd_putc('\n');	//Utolso 5 felfutesi ido:
+		unsigned int * lastheat;
+		lastheat = LastHeatingGet();
 		for(unsigned char i = 0; i < 5; i++) {				//123,123,123,123,123 perc
-			itoa(screen.last_heat[i], buffer, 10);
+			itoa(lastheat[i], buffer, 10);
 			lcd_puts(buffer);
 			if(i < 4) lcd_putc(',');
 		}
@@ -238,7 +232,7 @@ void ScreenRefresh(void) {
 		lcd_puts_p(string_table[BEALLITASOK]);			//Beallitasok(1):
 		lcd_puts_p(string_table[B1]); lcd_putc('\n');	//Bekapcs. mod:<abszolut>
 		lcd_puts_p(string_table[BEKAPCSMOD]);
-		if(screen.mode) {
+		if(SetupGetTmpMode() == MODE_ABS) {
 			lcd_puts_p(string_table[ABSZOLUT]);
 			lcd_putc(' ');
 		} else {
@@ -253,7 +247,7 @@ void ScreenRefresh(void) {
 		lcd_putc(' ');
 		lcd_putc(FEL_C);
 		lcd_putc(' ');
-		itoa(screen.on_temp, buffer, 10);
+		itoa(SetupGetTmpOnTemp(), buffer, 10);
 		lcd_puts(buffer);
 		lcd_putc(CELSIUS_C);
 		lcd_putc(' ');
@@ -284,116 +278,4 @@ void ScreenRefresh(void) {
 	else {
 		lcd_puts_p(string_table[ERROR_S]);
 	}
-}
-
-/*!
- * \brief Medence hőmérséklet screen-be.
- * \param value unsigned char
- * \return none
- */
-void ScreenSet_med_temp(unsigned char value) {
-	if(value > MED_TEMP_MAX) {
-		screen.med_temp = MED_TEMP_MAX;
-	} else {
-		screen.med_temp = value;
-	}
-}
-
-/*!
- * \brief Napkollektor hőmérséklet screen-be.
- * \param value unsigned char
- * \return none
- */
-void ScreenSet_koll_temp(unsigned char value) {
-	if(value > NAPKOLL_TEMP_MAX) {
-		screen.koll_temp = NAPKOLL_TEMP_MAX;
-	} else {
-		screen.koll_temp = value;
-	}
-}
-
-/*!
- * \brief Hőmérséklet emelkedési trend screen-be.
- * \param value unsigned char
- * \return none
- */
-void ScreenSet_trend(unsigned int value) {
-	if(value > TREND_MAX) {
-		screen.trend = TREND_MAX;
-	} else {
-		screen.trend = value;
-	}
-}
-
-/*!
- * \brief Hőmérséklet emelkedési trend mértékegysége screen-be.
- * \param value unsigned char
- * \return none
- */
-void ScreenSet_trend_unit(unsigned char value) {
-	screen.trend_unit = value;
-}
-
-/*!
- * \brief Szivattyú státus screen-be.
- * \param value unsigned char
- * \return none
- */
-void ScreenSet_pump_state(unsigned char value) {
-	screen.pump_state = value;
-}
-
-/*!
- * \brief Várható bekapcsolás ideje screen-be.
- * \param value unsigned char
- * \return none
- */
-void ScreenSet_remain(unsigned int value) {
-	if(value > REMAIN_MAX) {
-		screen.remain = REMAIN_MAX;
-	} else {
-		screen.remain = value;
-	}
-}
-
-/*!
- * \brief Várható bekapcsolás ideje mértékegysége screen-be.
- * \param value unsigned char
- * \return none
- */
-void ScreenSet_remain_unit(unsigned char value) {
-	screen.remain_unit = value;
-}
-
-/*!
- * \brief Bekapcsolási hőmérséklet screen-be.
- * \param value unsigned char
- * \return none
- */
-void ScreenSet_on_temp(unsigned char value) {
-	if(value > ONTEMP_MAX) {
-		value = ONTEMP_MAX;
-	} else {
-		screen.on_temp = value;
-	}
-}
-
-/*!
- * \brief Utlosó 5 felfütési idő screen-be.
- * \param value unsigned char pointer
- * \return none
- */
-void ScreenSet_last_heat(unsigned int *value) {
-	for(unsigned char i = 0; i < 5; i++) {
-		screen.last_heat[i] = value[i];
-	}
-}
-
-/*!
- * \brief Bekapcsolási metódus (abszolut/kulonbség)
- * \param value unsigned char
- * \return none
- */
-void ScreenSet_mode(unsigned char value) {
-	screen.mode = value;
 }

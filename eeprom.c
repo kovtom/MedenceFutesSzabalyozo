@@ -22,8 +22,6 @@ static EEPROM_S EEMEM eeprom;
  */
 void EEPROMInit(void) {
 	unsigned int tmp[] = { 10, 20, 30, 34, 67 };
-	EEPROMWriteMode(MODE_KUL);
-	EEPROMWriteOnTemp(20);
 	EEPROMWriteLastFive(tmp);
 	EEPROMWriteTotalPumpTime(5420);
 }

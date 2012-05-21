@@ -51,36 +51,43 @@ void ButtonMenu(void){
 		unsigned char tmp = ButtonGet();
 		if(tmp == B_MENU) {				//Ha MENU volt akkor leptejuk a screen-t
 			ScreenNextSelector();
+			SetupUndo();
 		} else {
-			if(tmp == B_OK && ScreenGetSelector() > SCREEN_ALL_OP_TIME) {  //Ha Setupban vagyunk és OK
-				//Itt mentjuk a beállított adatokat
+			if(tmp == B_OK && ScreenGetSelector() == SCREEN_SET_MODE) {  //Ha Setup_mode-ban vagyunk és OK
+				SetupWriteMode();
+				ButtonBeep(10);
+			}
+			else if(tmp == B_OK && ScreenGetSelector() == SCREEN_SET_TEMP) {  //Ha Setup_on_temp-ben vagyunk és OK
+							SetupWriteOnTemp();
+							ButtonBeep(10);
 			}
 			else if((tmp == B_UP || tmp == B_DOWN) &&	 //Mod setup
 					ScreenGetSelector() == SCREEN_SET_MODE) {
-				if(SetupGetMode() == MODE_ABS) {
-					SetupWriteMode(MODE_KUL);
+				if(SetupGetTmpMode() == MODE_ABS) {
+					SetupWriteTmpMode(MODE_KUL);
 				} else {
-					SetupWriteMode(MODE_ABS);
+					SetupWriteTmpMode(MODE_ABS);
 				}
 			}
 			else if(tmp == B_UP &&								//On temp setup UP
 					ScreenGetSelector() == SCREEN_SET_TEMP &&
-					SetupGetOnTemp() < ONTEMP_MAX) {
-				unsigned char tmp = SetupGetOnTemp();
+					SetupGetTmpOnTemp() < ONTEMP_MAX) {
+				unsigned char tmp = SetupGetTmpOnTemp();
 				tmp++;
-				SetupWriteOnTemp(tmp);
+				SetupWriteTmpOnTemp(tmp);
 			}
 			else if(tmp == B_DOWN &&							//On temp setup DOWN
 					ScreenGetSelector() == SCREEN_SET_TEMP &&
-					SetupGetOnTemp() > 1) {
-				unsigned char tmp = SetupGetOnTemp();
+					SetupGetTmpOnTemp() > 1) {
+				unsigned char tmp = SetupGetTmpOnTemp();
 				tmp--;
-				SetupWriteOnTemp(tmp);
+				SetupWriteTmpOnTemp(tmp);
 			}
 		}
 	} else {
 		if(TimeGetNow() - button.prev_menu_time > MENU_TIMEOUT) {
 			ScreenSelector(SCREEN_MAIN);
+			SetupUndo();
 		}
 	}
 }

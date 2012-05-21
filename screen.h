@@ -68,16 +68,6 @@
  * Ebben tároljuk az LCD-re kiírandó adatokat
  */
 typedef struct SCREEN {
-	unsigned char med_temp;		//**< Medence hőmérséklet string */
-	unsigned char koll_temp;	//**< Napkollektor hőmérséklet */
-	unsigned int trend;		//**< Hőmérséklet emelkedés perc/sec /°C */
-	unsigned char trend_unit;	//**< Hőm. emelkedés mértékegység (sec/min) */
-	unsigned char pump_state;	//**< Szivattyú státusz (BE/KI)
-	unsigned int remain;		//**< Várható bekapcsolási idő (sec/min) */
-	unsigned char remain_unit;	//**< Várható felfűtés mértékegység */
-	unsigned char on_temp;		//**< Bekapcsolási hőfok */
-	unsigned int last_heat[5];	//**< Utolsó öt felfűtési időtartam */
-	unsigned char mode;			//**< Bekapcsolási metódus (különbségi/abszolút) */
 	unsigned char selector;		//**< Melyik képernyőt jelenítjük meg(0,1,3,4) */
 	unsigned char prev_selector;//**< Az előző refresh selectora */
 } SCREEN;
@@ -87,15 +77,5 @@ void ScreenSelector(unsigned char);
 void ScreenNextSelector(void);
 unsigned char ScreenGetSelector(void);
 void ScreenRefresh(void);
-void ScreenSet_med_temp(unsigned char);
-void ScreenSet_koll_temp(unsigned char);
-void ScreenSet_trend(unsigned int);
-void ScreenSet_trend_unit(unsigned char);
-void ScreenSet_pump_state(unsigned char);
-void ScreenSet_remain(unsigned int);
-void ScreenSet_remain_unit(unsigned char);
-void ScreenSet_on_temp(unsigned char);
-void ScreenSet_last_heat(unsigned int *);
-void ScreenSet_mode(unsigned char);
 
 #endif /* SCREEN_H_ */

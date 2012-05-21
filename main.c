@@ -38,27 +38,8 @@ int main(void) {
 		static unsigned char led_status;
 
 		ScreenRefresh();
-
-		ScreenSet_koll_temp(TempGet(NAPKOLLEKTOR_CH));
-		ScreenSet_med_temp(TempGet(MEDENCE_CH));
-
-		ScreenSet_trend(TrendGet());
-		ScreenSet_trend_unit(TrendGetUnit());
-
-		ScreenSet_remain(RemainGet());
-		ScreenSet_remain_unit(RemainGetUnit());
-
 		PumpRefresh();
-		ScreenSet_pump_state(PumpGetStatus());
-
 		LastHeatingRefresh();
-		unsigned int tmp[5];
-		LastHeatingGet(tmp);
-		ScreenSet_last_heat(tmp);
-
-		ScreenSet_mode(SetupGetMode());
-		ScreenSet_on_temp(SetupGetOnTemp());
-
 		ButtonMenu();
 
 		//LED villogtatás

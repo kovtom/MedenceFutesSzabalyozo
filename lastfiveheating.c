@@ -11,7 +11,7 @@
 #include "timer.h"
 #include "pump.h"
 
-static LASTHEATING lastheating;
+LASTHEATING lastheating;
 
 /*!
  * \brief LastHeating inicializálás.
@@ -68,13 +68,9 @@ void LastHeatingRefresh(void) {
  * \param value unsigned char pointer
  * \return none
  */
-void LastHeatingGet(unsigned int *value) {
-	for(unsigned char i = 0; i < 5; i++) {
-		value[i] = lastheating.heating_time[i];
-	}
+unsigned int * LastHeatingGet(void) {
+	return lastheating.heating_time;
 }
-
-
 
 
 

@@ -64,6 +64,8 @@ void PumpInit(void) {
 	PUMP_RELAY_DIR |= _BV(PUMP_RELAY);
 	pump.status = PUMP_OFF;
 	optime.prev_pump_state = PUMP_OFF;
+	optime.all_time = EEPROMReadTotalPumpTime();
+	PumpOpCalc();
 }
 
 /*!
@@ -82,38 +84,6 @@ unsigned char PumpGetStatus(void) {
  */
 void PumpRefresh(void) {
 	signed char delta_temp;
-
-	//Ha az abs beállított kisebb mint a medence hőfok akkor emelünk egyet
-	//a beállított hőfokon.
-	if(TempGet(MEDENCE_CH) >= SetupGetOnTemp() &&
-			SetupGetMode() == MODE_ABS) {
-		//SZIVATTYÚ KI
-		PUMP_RELAY_PORT &= ~_BV(PUMP_RELAY);
-		pump.status = PUMP_ERROR;
-		unsigned char tmp;
-		tmp = SetupGetOnTemp();
-		if(tmp < 99) {
-			tmp++;
-		}
-		SetupWriteOnTemp(tmp);
-		return;
-	}
-	//Ha a kulomb. beállított + medence > 99 fok
-	if(SetupGetMode() == MODE_KUL &&
-			(SetupGetOnTemp() + TempGet(MEDENCE_CH)) > 99 ) {
-		//SZIVATTYÚ KI
-		PUMP_RELAY_PORT &= ~_BV(PUMP_RELAY);
-		pump.status = PUMP_ERROR;
-		unsigned char tmp;
-		tmp = SetupGetOnTemp();
-		if(tmp > 0) {
-			--tmp;
-		}
-		SetupWriteOnTemp(tmp);
-		return;
-	}
-
-
 	if(SetupGetMode() == MODE_ABS) {
 		delta_temp = (signed char)SetupGetOnTemp() -
 					 (signed char)TempGet(NAPKOLLEKTOR_CH);

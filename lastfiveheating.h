@@ -22,6 +22,6 @@ typedef struct LASTHEATING {
 
 void LastHeatingInit(void);
 void LastHeatingRefresh(void);
-void LastHeatingGet(unsigned int *);
+unsigned int * LastHeatingGet(void);
 
 #endif /* LASTFIVEHEATING_H_ */
