@@ -23,8 +23,6 @@ typedef struct TEMPMEASURE {
 	unsigned char med_temp;				//**< Medence hőmérséklet */
 	unsigned char koll_temp;			//**< Napkollektor hőmérséklet */
 	unsigned long int prev_time;		//**< Előző medence mérés ideje */
-	signed char koll_temp_diff;			//**< Napkollektor szonda beállítás */
-	signed char med_temp_diff;			//**< Medence szonda beállítás */
 }TEMPMEASURE;
 
 void TempmeasureInit(void);

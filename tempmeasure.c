@@ -10,6 +10,7 @@
 #include "misc.h"
 #include "adc.h"
 #include "timer.h"
+#include "setup.h"
 #include <avr/io.h>
 
 #ifdef DEBUG_TEMPMEASURE
@@ -42,9 +43,11 @@ static unsigned char Tempmeasure(unsigned char channel) {
 	tmp = tmp / 50;								   //ha tmp >= 50 akkor felfelé kerekítünk
 	celsius = (celsius / 100) + tmp;			   //kerekítést hozzáadjuk
 	if(channel == MEDENCE_CH) {
-		return 21;
+		celsius = 21;  //Szenzor bekötése esetén kivenni;
+		celsius = (signed char)celsius + SetupGetMedDiff(); //hozzáadjuk a korrekciót
+		return (unsigned char)celsius;
 	} else {
-		celsius = (signed char)celsius + tempmeasure.koll_temp_diff; //hozzáadjuk a korrekciót
+		celsius = (signed char)celsius + SetupGetKollDiff(); //hozzáadjuk a korrekciót
 		return (unsigned char)celsius;
 	}
 #else
@@ -80,7 +83,6 @@ void TempmeasureInit(void) {
 	tempmeasure.med_temp = Tempmeasure(MEDENCE_CH);
 	tempmeasure.koll_temp = Tempmeasure(NAPKOLLEKTOR_CH);
 	tempmeasure.prev_time = TimeGetNow();
-	tempmeasure.koll_temp_diff = 0;
 }
 /*!
  * \brief Hőmérséklet mérés
