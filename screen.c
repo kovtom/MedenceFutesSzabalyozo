@@ -57,6 +57,10 @@ static const char string19[] PROGMEM = "Szivattyu ossz. uzemido:\n";
 static const char string20[] PROGMEM = "d  ";
 static const char string21[] PROGMEM = "h  ";
 static const char string22[] PROGMEM = "Mentett adatok torlese:\nOssz.uzem/Utolso f. <OK>";
+static const char string23[] PROGMEM = "(3):";
+static const char string24[] PROGMEM = "(4):";
+static const char string25[] PROGMEM = "Napkoll. kalibr.:";
+static const char string26[] PROGMEM = "Medence. kalibr.:";
 
 /*!
  * \brief Stringek tárolása program memóriában
@@ -85,7 +89,11 @@ PGM_P string_table[] PROGMEM =
 		string19,
 		string20,
 		string21,
-		string22
+		string22,
+		string23,
+		string24,
+		string25,
+		string26
 };
 
 volatile SCREEN screen;
@@ -157,7 +165,7 @@ void ScreenRefresh(void) {
 	screen.prev_selector = screen.selector;			//tároljuk az előző selectort
 
 	if(screen.selector == SCREEN_MAIN) {
-		lcd_puts_p(string_table[MEDENCE]);	//Medence:20°C
+		lcd_puts_p(string_table[MEDENCE_S]);	//Medence:20°C
 		itoa(TempGet(MEDENCE_CH), buffer, 10);
 		lcd_puts(buffer);
 		lcd_putc(CELSIUS_C);
@@ -187,7 +195,7 @@ void ScreenRefresh(void) {
 			lcd_puts_p(string_table[PUMP_ERROR_S]);
 		}
 
-		lcd_puts_p(string_table[NAPKOLL]);	//Napkoll:20°C
+		lcd_puts_p(string_table[NAPKOLL_S]);	//Napkoll:20°C
 		itoa(TempGet(NAPKOLLEKTOR_CH), buffer, 10);
 		lcd_puts(buffer);
 		lcd_putc(CELSIUS_C);
@@ -218,7 +226,7 @@ void ScreenRefresh(void) {
 	}
 
 	else if(screen.selector == SCREEN_LASTFIVE) {
-		lcd_puts_p(string_table[UTOLSO_5]); lcd_putc('\n');	//Utolso 5 felfutesi ido:
+		lcd_puts_p(string_table[UTOLSO_5_S]); lcd_putc('\n');	//Utolso 5 felfutesi ido:
 		unsigned int * lastheat;
 		lastheat = LastHeatingGet();
 		for(unsigned char i = 0; i < 5; i++) {				//123,123,123,123,123 perc
@@ -227,25 +235,25 @@ void ScreenRefresh(void) {
 			if(i < 4) lcd_putc(',');
 		}
 		lcd_putc(' ');
-		lcd_puts_p(string_table[PERC]);
+		lcd_puts_p(string_table[PERC_S]);
 	}
 
 	else if(screen.selector == SCREEN_SET_MODE) {
-		lcd_puts_p(string_table[BEALLITASOK]);			//Beallitasok(1):
-		lcd_puts_p(string_table[B1]); lcd_putc('\n');	//Bekapcs. mod:<abszolut>
-		lcd_puts_p(string_table[BEKAPCSMOD]);
+		lcd_puts_p(string_table[BEALLITASOK_S]);			//Beallitasok(1):
+		lcd_puts_p(string_table[B1_S]); lcd_putc('\n');	//Bekapcs. mod:<abszolut>
+		lcd_puts_p(string_table[BEKAPCSMOD_S]);
 		if(SetupGetTmpMode() == MODE_ABS) {
-			lcd_puts_p(string_table[ABSZOLUT]);
+			lcd_puts_p(string_table[ABSZOLUT_S]);
 			lcd_putc(' ');
 		} else {
-			lcd_puts_p(string_table[KULONBSEG]);
+			lcd_puts_p(string_table[KULONBSEG_S]);
 		}
 	}
 
 	else if(screen.selector == SCREEN_SET_TEMP) {
-		lcd_puts_p(string_table[BEALLITASOK]);			//Beallitasok(2):
-		lcd_puts_p(string_table[B2]); lcd_putc('\n');	//Bekapcs. hofok: ^20Cˇ
-		lcd_puts_p(string_table[BEKAPCSHOF]);
+		lcd_puts_p(string_table[BEALLITASOK_S]);			//Beallitasok(2):
+		lcd_puts_p(string_table[B2_S]); lcd_putc('\n');	//Bekapcs. hofok: ^20Cˇ
+		lcd_puts_p(string_table[BEKAPCSHOF_S]);
 		lcd_putc(' ');
 		lcd_putc(FEL_C);
 		lcd_putc(' ');
@@ -277,8 +285,38 @@ void ScreenRefresh(void) {
 		lcd_putc(SEC_C1); lcd_putc(SEC_C2);
 	}
 
-	else if(screen.selector == SCREEN_SET_SAVED_CLR){
-		lcd_puts_p(string_table[SETUP_SAVED_CLEAR]);
+	else if(screen.selector == SCREEN_SET_SAVED_CLR) {
+		lcd_puts_p(string_table[SETUP_SAVED_CLEAR_S]);
+	}
+
+	else if(screen.selector == SCREEN_SET_KOLL_KORR) {
+		lcd_puts_p(string_table[BEALLITASOK_S]);
+		lcd_puts_p(string_table[B3_S]);
+
+		itoa(TempGet(NAPKOLLEKTOR_CH), buffer, 10);
+		lcd_putc(' ');
+		lcd_puts(buffer); lcd_putc(CELSIUS_C); lcd_putc('\n');
+		lcd_puts_p(string_table[KOLL_KORR_S]); lcd_putc(' ');
+
+		lcd_putc(FEL_C);
+		itoa(SetupGetKollDiff(), buffer, 10); lcd_putc(' ');
+		lcd_puts(buffer); lcd_putc(' ');
+		lcd_putc(LE_C); lcd_putc(' ');
+	}
+
+	else if(screen.selector == SCREEN_SET_MED_KORR) {
+		lcd_puts_p(string_table[BEALLITASOK_S]);
+		lcd_puts_p(string_table[B4_S]);
+
+		itoa(TempGet(MEDENCE_CH), buffer, 10);
+		lcd_putc(' ');
+		lcd_puts(buffer); lcd_putc(CELSIUS_C); lcd_putc('\n');
+		lcd_puts_p(string_table[MED_KORR_S]); lcd_putc(' ');
+
+		lcd_putc(FEL_C);
+		itoa(SetupGetMedDiff(), buffer, 10); lcd_putc(' ');
+		lcd_puts(buffer); lcd_putc(' ');
+		lcd_putc(LE_C); lcd_putc(' ');
 	}
 
 	else {

@@ -16,8 +16,10 @@
 #define SCREEN_ALL_OP_TIME 2 //**< Összes üzemidő képernyő */
 #define SCREEN_SET_MODE 3	//**< Beállítás fűtési mód képernyő */
 #define SCREEN_SET_TEMP 4	//**< Beállítás hőmérséklet képernyő */
-#define SCREEN_SET_SAVED_CLR 5 //**< Beállítás mentett adat törlés */
-#define SCREEN_NUMBER 5		//**< Utolsó SCREEN sorszáma */
+#define SCREEN_SET_KOLL_KORR 5 //**< Beállítás napkollektor korrekció */
+#define SCREEN_SET_MED_KORR 6 //**< Beállítás medence korrekció */
+#define SCREEN_SET_SAVED_CLR 7 //**< Beállítás mentett adat törlés */
+#define SCREEN_NUMBER 7		//**< Utolsó SCREEN sorszáma */
 #define PUMP_OFF 0			//**< OFF (szivattyú) */
 #define PUMP_ON 1			//**< ON (szivattyú) */
 #define PUMP_ERROR 3		//**< Magasabb a medence hőm mint az abs beállított */

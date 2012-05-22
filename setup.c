@@ -162,4 +162,6 @@ void SetupWriteMedDiff(signed char value, unsigned char save) {
 void SetupUndo(void) {
 	setup.tmp_mode = setup.valid_mode;
 	setup.tmp_on_temp = setup.valid_on_temp;
+	setup.koll_diff = (signed char)EEPROMReadKollDiff();
+	setup.med_diff = (signed char)EEPROMReadMedDiff();
 }

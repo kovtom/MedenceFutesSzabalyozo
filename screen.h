@@ -30,17 +30,17 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#define MEDENCE 0		//**< 'Medence:' string */
-#define NAPKOLL 1		//**< 'Napkoll:' string */
-#define UTOLSO_5 2		//**< 'Utolso 5 felfutesi ido:' string */
-#define PERC 3			//**< 'perc' string */
-#define BEALLITASOK 4	//**< 'Beallitasok' string */
-#define BEKAPCSMOD 5	//**< 'Bekapcs. mod:' string */
-#define ABSZOLUT 6		//**< '<abszolut>' string */
-#define KULONBSEG 7 	//**< '<kulonbseg>' string */
-#define BEKAPCSHOF 8	//**< 'Bekapcs. hofok:' string */
-#define B1 9			//**< '(1):' string */
-#define B2 10			//**< '(2):' string */
+#define MEDENCE_S 0		//**< 'Medence:' string */
+#define NAPKOLL_S 1		//**< 'Napkoll:' string */
+#define UTOLSO_5_S 2		//**< 'Utolso 5 felfutesi ido:' string */
+#define PERC_S 3			//**< 'perc' string */
+#define BEALLITASOK_S 4	//**< 'Beallitasok' string */
+#define BEKAPCSMOD_S 5	//**< 'Bekapcs. mod:' string */
+#define ABSZOLUT_S 6		//**< '<abszolut>' string */
+#define KULONBSEG_S 7 	//**< '<kulonbseg>' string */
+#define BEKAPCSHOF_S 8	//**< 'Bekapcs. hofok:' string */
+#define B1_S 9			//**< '(1):' string */
+#define B2_S 10			//**< '(2):' string */
 #define ERROR_S 11		//**< 'Error' string */
 #define BE_S 12			//**< 'BE\n' string */
 #define KI_S 13			//**< 'KI\n' string */
@@ -52,7 +52,11 @@
 #define ALL_TIME_S 19 	//**< 'Szivattyú össz. üzemidő:\n' string */
 #define DAY_S 20		//**< 'd  ' string */
 #define HOUR_S 21		//**< 'h  ' string */
-#define SETUP_SAVED_CLEAR 22 //**< 'Mentett adatok torlese:\n Ossz. uzem/Utolso felf.' */
+#define SETUP_SAVED_CLEAR_S 22 //**< 'Mentett adatok torlese:\n Ossz. uzem/Utolso felf.' */
+#define B3_S 23			//**< '(3):' string */
+#define B4_S 24			//**< '(4):' string */
+#define KOLL_KORR_S 25	//**< 'Napkoll.kalibr:' */
+#define MED_KORR_S 26	//**< 'Medence.kalibr:' */
 
 #define SELECTOR_MAX 5	//**< Ennyi screen-ünk van */
 

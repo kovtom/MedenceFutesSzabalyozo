@@ -90,6 +90,32 @@ void ButtonMenu(void){
 				PumpAllTimeClear();
 				ButtonBeep(10);
 			}
+			else if(tmp == B_UP &&
+					ScreenGetSelector() == SCREEN_SET_KOLL_KORR) { //Napkollektor korrekció Setup
+				SetupWriteKollDiff(SetupGetKollDiff() + 1, WRITE_TO_RAM);
+			}
+			else if(tmp == B_DOWN &&
+					ScreenGetSelector() == SCREEN_SET_KOLL_KORR) { //Napkollektor korrekció Setup
+				SetupWriteKollDiff(SetupGetKollDiff() - 1, WRITE_TO_RAM);
+			}
+			else if(tmp == B_OK &&
+					ScreenGetSelector() == SCREEN_SET_KOLL_KORR) { //Napkollektor korrekció Setup
+				SetupWriteKollDiff(SetupGetKollDiff(), WRITE_TO_EEPROM);
+				ButtonBeep(10);
+			}
+			else if(tmp == B_UP &&
+					ScreenGetSelector() == SCREEN_SET_MED_KORR) { //Medence korrekció Setup
+				SetupWriteMedDiff(SetupGetMedDiff() + 1, WRITE_TO_RAM);
+			}
+			else if(tmp == B_DOWN &&
+					ScreenGetSelector() == SCREEN_SET_MED_KORR) { //Medence korrekció Setup
+				SetupWriteMedDiff(SetupGetMedDiff() - 1, WRITE_TO_RAM);
+			}
+			else if(tmp == B_OK &&
+					ScreenGetSelector() == SCREEN_SET_MED_KORR) { //Medence korrekció Setup
+				SetupWriteMedDiff(SetupGetMedDiff(), WRITE_TO_EEPROM);
+				ButtonBeep(10);
+			}
 		}
 	} else {
 		if(TimeGetNow() - button.prev_menu_time > MENU_TIMEOUT) {
